@@ -3,9 +3,9 @@ import { ScrollView, StyleSheet } from 'react-native';
 
 import { Colors } from '../utils/theme';
 
-interface Props {
+type Props = {
   children: JSX.Element[] | JSX.Element;
-}
+};
 
 const Screen = ({ children }: Props) => (
   <ScrollView
