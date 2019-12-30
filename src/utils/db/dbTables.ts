@@ -1,51 +1,70 @@
 import { SQLiteDatabase, Transaction } from 'react-native-sqlite-storage';
 
-const tableNameVersion = 'version';
-const tableColumnsVersion = {
-  id: 'INTEGER PRIMARY KEY',
-  comment: 'TEXT',
+type Spec = {
+  [k: string]: string;
 };
 
-const tableNameBook = 'book';
-const tableColumnsBook = {
-  id: 'INTEGER PRIMARY KEY',
-  title: 'TEXT NOT NULL',
-  description: 'TEXT NOT NULL',
+type TableSpec = {
+  columns: Spec;
+  foreignKeys?: Spec;
 };
 
-const tableNameChapter = 'chapter';
-const tableColumnsChapter = {
-  id: 'INTEGER PRIMARY KEY',
-  book_id: 'INTEGER NOT NULL',
-  title: 'TEXT NOT NULL',
-};
-const tableForeignKeysChapter = {
-  book_id: `${tableNameBook} (id) ON DELETE CASCADE`,
+export const Tables: Spec = {
+  version: 'version',
+  book: 'book',
+  chapter: 'chapter',
+  chapterItem: 'chapter_item',
 };
 
-const tableNameChapterItem = 'chapter_item';
-const tableColumnsChapterItem = {
-  id: 'INTEGER PRIMARY KEY',
-  chapter_id: 'INTEGER NOT NULL',
-  content: 'TEXT NOT NULL',
-  color: 'TEXT',
-  type: 'TEXT',
-};
-const tableForeignKeysChapterItem = {
-  chapter_id: `${tableNameChapter} (id) ON DELETE CASCADE`,
+const TableSpecs: { [k: string]: TableSpec } = {
+  [Tables.version]: {
+    columns: {
+      id: 'INTEGER PRIMARY KEY',
+      comment: 'TEXT',
+    },
+  },
+  [Tables.book]: {
+    columns: {
+      d: 'INTEGER PRIMARY KEY',
+      title: 'TEXT NOT NULL',
+      description: 'TEXT NOT NULL',
+    },
+  },
+  [Tables.chapter]: {
+    columns: {
+      id: 'INTEGER PRIMARY KEY',
+      book_id: 'INTEGER NOT NULL',
+      title: 'TEXT NOT NULL',
+    },
+    foreignKeys: {
+      book_id: `${Tables.book} (id) ON DELETE CASCADE`,
+    },
+  },
+  [Tables.chapterItem]: {
+    columns: {
+      id: 'INTEGER PRIMARY KEY',
+      chapter_id: 'INTEGER NOT NULL',
+      content: 'TEXT NOT NULL',
+      color: 'TEXT',
+      type: 'TEXT',
+    },
+    foreignKeys: {
+      chapter_id: `${Tables.chapter} (id) ON DELETE CASCADE`,
+    },
+  },
 };
 
-const tableIndexes: { [k: string]: string } = {
-  chapter_on_book_id: `${tableNameChapter} (book_id)`,
-  chapter_item_on_chapter_id: `${tableNameChapterItem} (chapter_id)`,
-  chapter_item_on_color: `${tableNameChapterItem} (color)`,
-  chapter_item_on_type: `${tableNameChapterItem} (type)`,
+const tableIndexes: Spec = {
+  chapter_on_book_id: `${Tables.chapter} (book_id)`,
+  chapter_item_on_chapter_id: `${Tables.chapterItem} (chapter_id)`,
+  chapter_item_on_color: `${Tables.chapterItem} (color)`,
+  chapter_item_on_type: `${Tables.chapterItem} (type)`,
 };
 
 const getCreateTableSQL = (
   name: string,
-  columns: { [k: string]: string },
-  foreignKeys: { [k: string]: string } | null = null,
+  columns: Spec,
+  foreignKeys: Spec | null = null,
 ) => {
   const columnStrings: String[] = [];
   const constrainStrings: String[] = [];
@@ -75,20 +94,24 @@ const getCreateTableSQL = (
 };
 
 const createDatabaseTables = (tx: Transaction) => {
-  tx.executeSql(getCreateTableSQL(tableNameVersion, tableColumnsVersion));
-  tx.executeSql(getCreateTableSQL(tableNameBook, tableColumnsBook));
+  tx.executeSql(
+    getCreateTableSQL(Tables.version, TableSpecs[Tables.version].columns),
+  );
+  tx.executeSql(
+    getCreateTableSQL(Tables.book, TableSpecs[Tables.book].columns),
+  );
   tx.executeSql(
     getCreateTableSQL(
-      tableNameChapter,
-      tableColumnsChapter,
-      tableForeignKeysChapter,
+      Tables.chapter,
+      TableSpecs[Tables.chapter].columns,
+      TableSpecs[Tables.chapter].foreignKeys,
     ),
   );
   tx.executeSql(
     getCreateTableSQL(
-      tableNameChapterItem,
-      tableColumnsChapterItem,
-      tableForeignKeysChapterItem,
+      Tables.chapterItem,
+      TableSpecs[Tables.chapterItem].columns,
+      TableSpecs[Tables.chapterItem].foreignKeys,
     ),
   );
 
@@ -97,16 +120,18 @@ const createDatabaseTables = (tx: Transaction) => {
   );
 
   tx.executeSql(
-    `INSERT INTO ${tableNameVersion} (comment) VALUES ("Initial version");`,
+    `INSERT INTO ${Tables.version} (comment) VALUES ("Initial version");`,
   );
   tx.executeSql(
-    `INSERT INTO ${tableNameBook} (title, description) VALUES ("Demo book", "This book can show what is possible here");`,
+    `INSERT INTO ${
+      Tables.book
+    } (title, description) VALUES ("Demo book", "This book can show what is possible here");`,
   );
 };
 
 export const onDatabaseOpened = async (dbProvider: SQLiteDatabase) => {
   try {
-    await dbProvider.executeSql(`SELECT 1 FROM ${tableNameVersion} LIMIT 1`);
+    await dbProvider.executeSql(`SELECT 1 FROM ${Tables.version} LIMIT 1`);
     console.log('Database has data and is ready');
   } catch (e) {
     console.log('Database is empty. Creating tables...');
