@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 
 import BooksScreen from './screens/BooksScreen';
 import BookScreen from './screens/BookScreen';
+import Storage from './components/Storage';
 
 import { Screens } from './utils/navigation';
 import { Colors } from './utils/theme';
@@ -42,6 +43,7 @@ const AppContainer = createAppContainer(AppNavigator);
 const App = () => (
   <Provider store={store}>
     <StatusBar barStyle="dark-content" backgroundColor={Colors.lighter} />
+    <Storage />
     <AppContainer />
   </Provider>
 );
