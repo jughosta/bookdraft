@@ -1,44 +1,30 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import { StatusBar } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-import { Colors } from './utils/theme';
+import BooksScreen from './screens/BooksScreen';
+import BookScreen from './screens/BookScreen';
 
-const App = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <View style={styles.body as StyleProp<ViewStyle>}>
-            <Text>BookDraft app</Text>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+import { Screens } from './utils/navigation';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+const AppNavigator = createStackNavigator(
+  {
+    [Screens.Books]: BooksScreen,
+    [Screens.Book]: BookScreen,
   },
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  {
+    initialRouteName: Screens.Books,
   },
-  body: {
-    color: Colors.dark,
-  },
-});
+);
+
+const AppContainer = createAppContainer(AppNavigator);
+
+const App = () => (
+  <>
+    <StatusBar barStyle="dark-content" />
+    <AppContainer />
+  </>
+);
 
 export default App;
