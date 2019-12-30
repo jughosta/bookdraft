@@ -7,25 +7,31 @@ import Screen from '../components/Screen';
 
 import { Screens } from '../utils/navigation';
 
-import { addBook } from '../reducers/booksSlice';
+import { addBook, fetchBooks } from '../reducers/booksSlice';
 
 import {
   NavigationParamsBook,
   NavigationParamsBooks,
 } from '../types/navigation.type';
-import { RootState } from '../types/rootState.type';
-import { Book } from '../types/book.type';
+import { RootState, ThunkDispatch } from '../types/redux.type';
+import { Book, BookData } from '../types/book.type';
 
 type Props = {
   books: Book[];
   navigation: NavigationStackProp<NavigationParamsBooks>;
-  addBook: typeof addBook;
+  dispatch: ThunkDispatch;
 };
 
 class BooksScreen extends React.Component<Props> {
   static navigationOptions = {
     title: 'Books',
   };
+
+  componentDidMount(): void {
+    const { dispatch } = this.props;
+
+    dispatch(fetchBooks());
+  }
 
   handleOpenBook = () => {
     const { navigation } = this.props;
@@ -37,10 +43,13 @@ class BooksScreen extends React.Component<Props> {
   };
 
   handleAddBook = () => {
-    this.props.addBook({
+    const { dispatch } = this.props;
+    const bookPayload: BookData = {
       title: 'Text',
       description: 'Example description',
-    });
+    };
+
+    dispatch(addBook(bookPayload));
   };
 
   render() {
@@ -66,12 +75,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ books }: RootState) => ({
-  books,
+  books: books.list,
 });
 
-const mapDispatchToProps = { addBook };
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(BooksScreen);
+export default connect(mapStateToProps)(BooksScreen);
