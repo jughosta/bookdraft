@@ -18,6 +18,10 @@ type Props = {
 };
 
 class BookScreen extends React.Component<Props> {
+  static navigationOptions = {
+    title: 'Book',
+  };
+
   render() {
     const { navigation } = this.props;
 

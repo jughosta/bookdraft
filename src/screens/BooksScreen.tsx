@@ -1,16 +1,9 @@
 import React from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StyleProp,
-  ViewStyle,
-  Button,
-} from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 
-import { Colors } from '../utils/theme';
+import Screen from '../components/Screen';
+
 import { Screens } from '../utils/navigation';
 
 import {
@@ -18,13 +11,13 @@ import {
   NavigationParamsBooks,
 } from '../types/navigation.type';
 
-type Props = {
+interface Props {
   navigation: NavigationStackProp<NavigationParamsBooks>;
-};
+}
 
 class BooksScreen extends React.Component<Props> {
   static navigationOptions = {
-    title: 'BookDraft',
+    title: 'Books',
   };
 
   handleOpenBook = () => {
@@ -38,14 +31,12 @@ class BooksScreen extends React.Component<Props> {
 
   render() {
     return (
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
-        <View style={styles.body as StyleProp<ViewStyle>}>
+      <Screen>
+        <View style={styles.container}>
           <Text>BookDraft app</Text>
           <Button title="Open book" onPress={this.handleOpenBook} />
         </View>
-      </ScrollView>
+      </Screen>
     );
   }
 }
@@ -53,12 +44,8 @@ class BooksScreen extends React.Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  body: {
-    color: Colors.dark,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
