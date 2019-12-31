@@ -72,11 +72,40 @@ export const queryAll = async (
   try {
     const [resultSets] = await dbProvider.executeSql(
       `SELECT * FROM ${table}${
-        whereStatement ? `WHERE ${whereStatement}` : ''
+        whereStatement ? ` WHERE ${whereStatement}` : ''
       } `,
       params,
     );
     return resultSets.rows.raw();
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const insert = async (
+  table: string,
+  data: { [k: string]: any },
+): Promise<number | undefined> => {
+  if (!dbProvider) {
+    return;
+  }
+
+  const columns = Object.keys(data);
+
+  try {
+    const [resultSets] = await dbProvider.executeSql(
+      `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns
+        .map(() => '?')
+        .join(', ')})`,
+      columns.reduce(
+        (arr, next) => {
+          arr.push(data[next]);
+          return arr;
+        },
+        <any[]>[],
+      ),
+    );
+    return resultSets.insertId;
   } catch (error) {
     console.warn(error);
   }

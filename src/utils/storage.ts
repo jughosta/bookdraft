@@ -1,49 +1,21 @@
-import { queryAll } from './db/dbProvider';
+import { queryAll, insert } from './db/dbProvider';
 import { Tables } from './db/dbTables';
 
-import { Book } from '../types/book.type';
-
-export const getBooksIds = async (): Promise<number[]> => {
-  // try {
-  //   const serializedBooksIds = await AsyncStorage.getItem(getBooksIdsKey());
-  //
-  //   if (!serializedBooksIds) {
-  //     return [];
-  //   }
-  //
-  //   return JSON.parse(serializedBooksIds);
-  // } catch (error) {
-  //   console.warn(error);
-  // }
-
-  return [];
-};
+import { Book, BookData } from '../types/book.type';
 
 export const getBooks = async (): Promise<Book[]> => {
   return queryAll(Tables.book);
 };
 
-export const getBook = async (bookId: number): Promise<Book | null> => {
-  // try {
-  //   const serializedBook = await AsyncStorage.getItem(getBookKey(bookId));
-  //
-  //   if (!serializedBook) {
-  //     return null;
-  //   }
-  //
-  //   return JSON.parse(serializedBook);
-  // } catch (error) {
-  //   console.warn(error);
-  // }
+export const getBook = async (bookId: number): Promise<Book | undefined> => {
+  const books = await queryAll(Tables.book, 'id = ?', [bookId]);
 
-  return null;
+  if (books.length === 1) {
+    return books[0];
+  }
 };
 
-export const saveBook = async (book: Book) => {
-  // await AsyncStorage.setItem(getBookKey(book.id), JSON.stringify(book));
-  // const booksIds = await getBooksIds();
-  // await AsyncStorage.setItem(
-  //   getBooksIdsKey(),
-  //   JSON.stringify([...booksIds, book.id]),
-  // );
+export const saveBook = async (bookData: BookData) => {
+  const bookId = await insert(Tables.book, bookData);
+  return await getBook(bookId);
 };
