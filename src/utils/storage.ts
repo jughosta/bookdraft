@@ -1,7 +1,7 @@
-import { Book } from '../types/book.type';
+import { queryAll } from './db/dbProvider';
+import { Tables } from './db/dbTables';
 
-const getBooksIdsKey = (): string => 'books-ids';
-const getBookKey = (bookId: number): string => `book-${bookId}`;
+import { Book } from '../types/book.type';
 
 export const getBooksIds = async (): Promise<number[]> => {
   // try {
@@ -20,22 +20,7 @@ export const getBooksIds = async (): Promise<number[]> => {
 };
 
 export const getBooks = async (): Promise<Book[]> => {
-  // try {
-  //   const booksIds = await getBooksIds();
-  //   const serializedBooks = await AsyncStorage.multiGet(
-  //     booksIds.map(getBookKey),
-  //   );
-  //
-  //   const books = serializedBooks
-  //     .map(([_, value]) => (value ? JSON.parse(value) : null))
-  //     .filter(Boolean);
-  //
-  //   return books;
-  // } catch (error) {
-  //   console.warn(error);
-  // }
-
-  return [];
+  return queryAll(Tables.book);
 };
 
 export const getBook = async (bookId: number): Promise<Book | null> => {

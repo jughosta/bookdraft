@@ -25,7 +25,7 @@ const TableSpecs: { [k: string]: TableSpec } = {
   },
   [Tables.book]: {
     columns: {
-      d: 'INTEGER PRIMARY KEY',
+      id: 'INTEGER PRIMARY KEY',
       title: 'TEXT NOT NULL',
       description: 'TEXT NOT NULL',
     },

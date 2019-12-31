@@ -59,3 +59,25 @@ export const closeDatabase = async () => {
     console.log('Could not close the database');
   }
 };
+
+export const queryAll = async (
+  table: string,
+  whereStatement?: string,
+  params?: any[],
+): Promise<any | undefined> => {
+  if (!dbProvider) {
+    return;
+  }
+
+  try {
+    const [resultSets] = await dbProvider.executeSql(
+      `SELECT * FROM ${table}${
+        whereStatement ? `WHERE ${whereStatement}` : ''
+      } `,
+      params,
+    );
+    return resultSets.rows.raw();
+  } catch (error) {
+    console.warn(error);
+  }
+};
