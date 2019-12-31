@@ -6,8 +6,6 @@ import { FetchStates } from '../utils/redux';
 import { Book, BookData } from '../types/book.type';
 import { ThunkResult, BooksState } from '../types/redux.type';
 
-let nextBookId = 0;
-
 const initialState: BooksState = {
   list: [],
   fetchState: FetchStates.initial,
@@ -35,9 +33,6 @@ export const fetchBooks = (): ThunkResult<Promise<void>> => async dispatch => {
   try {
     await dispatch(booksFetchStateChanged(FetchStates.loading));
     const books = await getBooks();
-    if (books.length > 0) {
-      nextBookId = Math.max(...books.map(b => b.id)) + 1;
-    }
     await dispatch(booksLoaded(books));
     await dispatch(booksFetchStateChanged(FetchStates.loaded));
   } catch (error) {
@@ -49,11 +44,10 @@ export const fetchBooks = (): ThunkResult<Promise<void>> => async dispatch => {
 export const addBook = (
   bookData: BookData,
 ): ThunkResult<Promise<void>> => async dispatch => {
-  const id = nextBookId++;
-  const book: Book = { ...bookData, id };
-
-  await saveBook(book);
-  await dispatch(bookAdded(book));
+  const book = await saveBook(bookData);
+  if (book) {
+    await dispatch(bookAdded(book));
+  }
 };
 
 export default booksSlice.reducer;

@@ -1,66 +1,21 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import { queryAll, insert } from './db/dbProvider';
+import { Tables } from './db/dbTables';
 
-import { Book } from '../types/book.type';
-
-const getBooksIdsKey = (): string => 'books-ids';
-const getBookKey = (bookId: number): string => `book-${bookId}`;
-
-export const getBooksIds = async (): Promise<number[]> => {
-  try {
-    const serializedBooksIds = await AsyncStorage.getItem(getBooksIdsKey());
-
-    if (!serializedBooksIds) {
-      return [];
-    }
-
-    return JSON.parse(serializedBooksIds);
-  } catch (error) {
-    console.warn(error);
-  }
-
-  return [];
-};
+import { Book, BookData } from '../types/book.type';
 
 export const getBooks = async (): Promise<Book[]> => {
-  try {
-    const booksIds = await getBooksIds();
-    const serializedBooks = await AsyncStorage.multiGet(
-      booksIds.map(getBookKey),
-    );
-
-    const books = serializedBooks
-      .map(([_, value]) => (value ? JSON.parse(value) : null))
-      .filter(Boolean);
-
-    return books;
-  } catch (error) {
-    console.warn(error);
-  }
-
-  return [];
+  return queryAll(Tables.book);
 };
 
-export const getBook = async (bookId: number): Promise<Book | null> => {
-  try {
-    const serializedBook = await AsyncStorage.getItem(getBookKey(bookId));
+export const getBook = async (bookId: number): Promise<Book | undefined> => {
+  const books = await queryAll(Tables.book, 'id = ?', [bookId]);
 
-    if (!serializedBook) {
-      return null;
-    }
-
-    return JSON.parse(serializedBook);
-  } catch (error) {
-    console.warn(error);
+  if (books.length === 1) {
+    return books[0];
   }
-
-  return null;
 };
 
-export const saveBook = async (book: Book) => {
-  await AsyncStorage.setItem(getBookKey(book.id), JSON.stringify(book));
-  const booksIds = await getBooksIds();
-  await AsyncStorage.setItem(
-    getBooksIdsKey(),
-    JSON.stringify([...booksIds, book.id]),
-  );
+export const saveBook = async (bookData: BookData) => {
+  const bookId = await insert(Tables.book, bookData);
+  return await getBook(bookId);
 };
