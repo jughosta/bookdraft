@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  TouchableNativeFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextStyle, View } from 'react-native';
+
+import Touchable from './Touchable';
 
 import { Colors } from '../utils/theme';
 
@@ -17,20 +11,14 @@ type Props = {
   onPress: () => void;
 };
 
-const Button = ({ icon, title, onPress }: Props) => {
-  const Touchable =
-    Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
-
-  return (
-    // @ts-ignore
-    <Touchable onPress={onPress}>
-      <View style={styles.content}>
-        {Boolean(icon) && <Text style={styles.icon}>{icon}</Text>}
-        <Text style={styles.title}>{title}</Text>
-      </View>
-    </Touchable>
-  );
-};
+const Button = ({ icon, title, onPress }: Props) => (
+  <Touchable onPress={onPress}>
+    <View style={styles.content}>
+      {Boolean(icon) && <Text style={styles.icon}>{icon}</Text>}
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  </Touchable>
+);
 
 const textStyle: TextStyle = {
   fontWeight: '600',
