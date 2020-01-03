@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TextStyle, View } from 'react-native';
 
-import Touchable from './Touchable';
+import Touchable from '../Touchable';
 
-import { Colors } from '../utils/theme';
+import { Colors } from '../../utils/theme';
 
 type Props = {
   icon?: '+';

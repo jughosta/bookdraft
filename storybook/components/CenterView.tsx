@@ -1,21 +1,34 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
+
 import { Colors } from '../../src/utils/theme';
 
-type Props = {
+interface IProps {
+  usesFullWidth?: boolean;
   children: JSX.Element[] | JSX.Element;
-};
+}
 
-const CenterView = ({ children }: Props) => (
-  <View style={styles.main}>{children}</View>
+const CenterView = ({ usesFullWidth, children }: IProps) => (
+  <View style={usesFullWidth ? styles.stretched : styles.normal}>
+    {children}
+  </View>
 );
 
+const commonStyles: ViewStyle = {
+  flex: 1,
+  justifyContent: 'center',
+  backgroundColor: Colors.lighter,
+};
+
 const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    justifyContent: 'center',
+  normal: {
+    ...commonStyles,
     alignItems: 'center',
-    backgroundColor: Colors.lighter,
+  },
+  stretched: {
+    ...commonStyles,
+    alignItems: 'stretch',
+    paddingHorizontal: 24,
   },
 });
 

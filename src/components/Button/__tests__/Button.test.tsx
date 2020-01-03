@@ -1,10 +1,9 @@
-import { Text } from 'react-native';
 import React from 'react';
-
-import Button from '../src/components/Button';
-
+import { Text } from 'react-native';
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
+
+import Button from '../Button';
 
 describe('<Button />', () => {
   it('renders correctly', () => {

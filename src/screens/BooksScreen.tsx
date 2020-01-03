@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 
-import Button from '../components/Button';
+import Button from '../components/Button/Button';
 import Screen from '../components/Screen';
 
 import { Screens } from '../utils/navigation';
