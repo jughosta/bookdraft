@@ -13,11 +13,11 @@ import { Colors } from '../utils/theme';
 
 import { NavigationParamsBook } from '../types/navigation.type';
 
-type Props = {
+interface IProps {
   navigation: NavigationStackProp<NavigationParamsBook>;
-};
+}
 
-class BookScreen extends React.Component<Props> {
+class BookScreen extends React.Component<IProps> {
   static navigationOptions = {
     title: 'Book',
   };

@@ -17,13 +17,13 @@ import {
 import { RootState, ThunkDispatch } from '../types/redux.type';
 import { Book, BookData } from '../types/book.type';
 
-type Props = {
+interface IProps {
   books: Book[];
   navigation: NavigationStackProp<NavigationParamsBooks>;
   dispatch: ThunkDispatch;
-};
+}
 
-class BooksScreen extends React.Component<Props> {
+class BooksScreen extends React.Component<IProps> {
   static navigationOptions = {
     title: 'Books',
   };
@@ -47,7 +47,6 @@ class BooksScreen extends React.Component<Props> {
     const { dispatch } = this.props;
     const bookPayload: BookData = {
       title: 'Text',
-      description: 'Example description',
     };
 
     dispatch(addBook(bookPayload));

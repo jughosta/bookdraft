@@ -3,11 +3,11 @@ import { ScrollView, StyleSheet } from 'react-native';
 
 import { Colors } from '../utils/theme';
 
-type Props = {
+interface IProps {
   children: JSX.Element[] | JSX.Element;
-};
+}
 
-const Screen = ({ children }: Props) => (
+const Screen = ({ children }: IProps) => (
   <ScrollView
     contentInsetAdjustmentBehavior="automatic"
     bounces={false}

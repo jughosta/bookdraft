@@ -5,13 +5,13 @@ import Touchable from '../Touchable';
 
 import { Colors } from '../../utils/theme';
 
-type Props = {
+interface IProps {
   icon?: '+';
   title: string;
   onPress: () => void;
-};
+}
 
-const Button = ({ icon, title, onPress }: Props) => (
+const Button = ({ icon, title, onPress }: IProps) => (
   <Touchable onPress={onPress}>
     <View style={styles.content}>
       {Boolean(icon) && <Text style={styles.icon}>{icon}</Text>}

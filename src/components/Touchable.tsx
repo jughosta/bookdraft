@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-type Props = {
+interface IProps {
   children: JSX.Element;
   onPress: () => void;
-};
+}
 
-const Touchable = ({ children, onPress }: Props) => {
+const Touchable = ({ children, onPress }: IProps) => {
   if (Platform.OS === 'android') {
     return (
       <TouchableNativeFeedback onPress={onPress}>
