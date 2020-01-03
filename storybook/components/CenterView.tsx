@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, SafeAreaView, ViewStyle } from 'react-native';
 
 import { Colors } from '../../src/utils/theme';
 
@@ -9,9 +9,9 @@ interface IProps {
 }
 
 const CenterView = ({ usesFullWidth, children }: IProps) => (
-  <View style={usesFullWidth ? styles.stretched : styles.normal}>
+  <SafeAreaView style={usesFullWidth ? styles.stretched : styles.normal}>
     {children}
-  </View>
+  </SafeAreaView>
 );
 
 const commonStyles: ViewStyle = {
@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
   stretched: {
     ...commonStyles,
     alignItems: 'stretch',
-    paddingHorizontal: 24,
   },
 });
 

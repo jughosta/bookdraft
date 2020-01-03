@@ -1,23 +1,30 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 
 import { Colors } from '../utils/theme';
 
 interface IProps {
+  scrollable?: boolean;
   children: JSX.Element[] | JSX.Element;
 }
 
-const Screen = ({ children }: IProps) => (
-  <ScrollView
-    contentInsetAdjustmentBehavior="automatic"
-    bounces={false}
-    style={styles.scrollView}>
-    {children}
-  </ScrollView>
-);
+const Screen = ({ scrollable, children }: IProps) => {
+  if (scrollable) {
+    return (
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        bounces={false}
+        style={styles.container}>
+        {children}
+      </ScrollView>
+    );
+  }
+
+  return <View style={styles.container}>{children}</View>;
+};
 
 const styles = StyleSheet.create({
-  scrollView: {
+  container: {
     flex: 1,
     color: Colors.dark,
     backgroundColor: Colors.lighter,

@@ -1,10 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 
-import Button from '../components/Button/Button';
 import Screen from '../components/Screen';
+import BookList from '../components/BookList/BookList';
 
 import { Screens } from '../utils/navigation';
 
@@ -34,10 +33,10 @@ class BooksScreen extends React.Component<IProps> {
     dispatch(fetchBooks());
   }
 
-  handleOpenBook = () => {
+  handleOpenBook = (book: Book) => {
     const { navigation } = this.props;
     const params: NavigationParamsBook = {
-      bookId: 1,
+      bookId: book.id,
     };
 
     navigation.navigate(Screens.Book, params);
@@ -56,23 +55,15 @@ class BooksScreen extends React.Component<IProps> {
     const { books } = this.props;
     return (
       <Screen>
-        <View style={styles.container}>
-          <Button title="Open book" onPress={this.handleOpenBook} />
-          <Text>{JSON.stringify(books)}</Text>
-          <Button icon="+" title="Add book" onPress={this.handleAddBook} />
-        </View>
+        <BookList
+          books={books}
+          onAdd={this.handleAddBook}
+          onPress={this.handleOpenBook}
+        />
       </Screen>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 const mapStateToProps = ({ books }: RootState) => ({
   books: books.list,
