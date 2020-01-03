@@ -8,6 +8,6 @@ export type NavigationParamsChapter = {
   chapterId: number;
 };
 
-export type NavigationParamsSection = {
-  sectionId: number;
+export type NavigationParamsChapterItem = {
+  chapterItemId: number;
 };

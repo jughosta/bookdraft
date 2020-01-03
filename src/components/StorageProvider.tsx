@@ -5,7 +5,7 @@ import { closeDatabase, openDatabase } from '../utils/db/dbProvider';
 
 type AppStateValue = 'active' | 'background' | 'inactive';
 
-class Storage extends React.Component {
+class StorageProvider extends React.Component {
   componentDidMount(): void {
     AppState.addEventListener('change', this.handleAppStateChanged);
     this.handleAppStateChanged('active');
@@ -29,4 +29,4 @@ class Storage extends React.Component {
   }
 }
 
-export default Storage;
+export default StorageProvider;
