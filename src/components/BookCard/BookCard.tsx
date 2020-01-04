@@ -27,10 +27,14 @@ class BookCard extends React.Component<IProps> {
       <Touchable onPress={this.handlePress}>
         <View style={styles.container}>
           <View style={styles.content}>
-            <IconBook fillColor={Palette.gray.v500} size={36} />
-            <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>
-              {book.title}
-            </Text>
+            <View style={styles.icon}>
+              <IconBook fillColor={Palette.gray.v500} size={36} />
+            </View>
+            <View style={styles.info}>
+              <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>
+                {book.title}
+              </Text>
+            </View>
           </View>
         </View>
       </Touchable>
@@ -40,7 +44,6 @@ class BookCard extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 4,
@@ -59,8 +62,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  icon: {
+    flexShrink: 0,
+    marginRight: 24,
+  },
+  info: {
+    flexShrink: 1,
+    flexGrow: 1,
+  },
   title: {
-    marginLeft: 24,
     fontWeight: '600',
     color: Palette.gray.v800,
   },

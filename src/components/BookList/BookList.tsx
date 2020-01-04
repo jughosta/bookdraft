@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 
 import BookCard from '../BookCard/BookCard';
 import Button from '../Button/Button';
+import Blank from '../Blank/Blank';
 
 import { Book } from '../../types/book.type';
 
@@ -35,6 +36,10 @@ class BookList extends React.Component<IProps> {
     return <Button icon="+" title="Create book" onPress={onCreate} />;
   };
 
+  renderEmpty = () => (
+    <Blank message="Hi! Welcome to BookDraft app - a place to write a book on the go! Start by creating your first book via the button below." />
+  );
+
   render() {
     const { books } = this.props;
 
@@ -47,6 +52,7 @@ class BookList extends React.Component<IProps> {
         ItemSeparatorComponent={this.renderSeparator}
         ListFooterComponent={this.renderFooter}
         ListFooterComponentStyle={styles.footer}
+        ListEmptyComponent={this.renderEmpty}
       />
     );
   }
