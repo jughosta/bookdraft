@@ -1,12 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 
-import Button from '../components/Button';
 import Screen from '../components/Screen';
+import CenterView from '../components/CenterView';
+import BookList from '../components/BookList/BookList';
 
 import { Screens } from '../utils/navigation';
+import { LoadingStatus } from '../utils/redux';
 
 import { addBook, fetchBooks } from '../reducers/booksSlice';
 
@@ -17,13 +19,14 @@ import {
 import { RootState, ThunkDispatch } from '../types/redux.type';
 import { Book, BookData } from '../types/book.type';
 
-type Props = {
+interface IProps {
   books: Book[];
+  loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBooks>;
   dispatch: ThunkDispatch;
-};
+}
 
-class BooksScreen extends React.Component<Props> {
+class BooksScreen extends React.Component<IProps> {
   static navigationOptions = {
     title: 'Books',
   };
@@ -34,10 +37,10 @@ class BooksScreen extends React.Component<Props> {
     dispatch(fetchBooks());
   }
 
-  handleOpenBook = () => {
+  handleOpenBook = (book: Book) => {
     const { navigation } = this.props;
     const params: NavigationParamsBook = {
-      bookId: 1,
+      bookId: book.id,
     };
 
     navigation.navigate(Screens.Book, params);
@@ -47,36 +50,34 @@ class BooksScreen extends React.Component<Props> {
     const { dispatch } = this.props;
     const bookPayload: BookData = {
       title: 'Text',
-      description: 'Example description',
     };
 
     dispatch(addBook(bookPayload));
   };
 
   render() {
-    const { books } = this.props;
+    const { books, loadingStatus } = this.props;
     return (
       <Screen>
-        <View style={styles.container}>
-          <Button title="Open book" onPress={this.handleOpenBook} />
-          <Text>{JSON.stringify(books)}</Text>
-          <Button icon="+" title="Add book" onPress={this.handleAddBook} />
-        </View>
+        {loadingStatus === LoadingStatus.initial ? (
+          <CenterView>
+            <ActivityIndicator />
+          </CenterView>
+        ) : (
+          <BookList
+            books={books}
+            onCreate={this.handleAddBook}
+            onPress={this.handleOpenBook}
+          />
+        )}
       </Screen>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
 const mapStateToProps = ({ books }: RootState) => ({
   books: books.list,
+  loadingStatus: books.loadingStatus,
 });
 
 export default connect(mapStateToProps)(BooksScreen);

@@ -27,7 +27,6 @@ const TableSpecs: { [k: string]: TableSpec } = {
     columns: {
       id: 'INTEGER PRIMARY KEY',
       title: 'TEXT NOT NULL',
-      description: 'TEXT NOT NULL',
     },
   },
   [Tables.chapter]: {
@@ -45,8 +44,7 @@ const TableSpecs: { [k: string]: TableSpec } = {
       id: 'INTEGER PRIMARY KEY',
       chapter_id: 'INTEGER NOT NULL',
       content: 'TEXT NOT NULL',
-      color: 'TEXT',
-      type: 'TEXT',
+      state: 'TEXT NOT NULL',
     },
     foreignKeys: {
       chapter_id: `${Tables.chapter} (id) ON DELETE CASCADE`,
@@ -57,8 +55,7 @@ const TableSpecs: { [k: string]: TableSpec } = {
 const tableIndexes: Spec = {
   chapter_on_book_id: `${Tables.chapter} (book_id)`,
   chapter_item_on_chapter_id: `${Tables.chapterItem} (chapter_id)`,
-  chapter_item_on_color: `${Tables.chapterItem} (color)`,
-  chapter_item_on_type: `${Tables.chapterItem} (type)`,
+  chapter_item_on_state: `${Tables.chapterItem} (state)`,
 };
 
 const getCreateTableSQL = (
@@ -122,11 +119,7 @@ const createDatabaseTables = (tx: Transaction) => {
   tx.executeSql(
     `INSERT INTO ${Tables.version} (comment) VALUES ("Initial version");`,
   );
-  tx.executeSql(
-    `INSERT INTO ${
-      Tables.book
-    } (title, description) VALUES ("Demo book", "This book can show what is possible here");`,
-  );
+  tx.executeSql(`INSERT INTO ${Tables.book} (title) VALUES ("Demo book");`);
 };
 
 export const onDatabaseOpened = async (dbProvider: SQLiteDatabase) => {

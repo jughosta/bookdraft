@@ -1,13 +1,14 @@
 import { Action } from '@reduxjs/toolkit';
 import { ThunkAction, ThunkDispatch as TDispatch } from 'redux-thunk';
 
-import { FetchStates } from '../utils/redux';
+import { LoadingStatus, UpdatingStatus } from '../utils/redux';
 
 import { Book } from './book.type';
 
 export type BooksState = {
   list: Book[];
-  fetchState: FetchStates;
+  loadingStatus: LoadingStatus;
+  updatingStatus: UpdatingStatus;
 };
 
 export type RootState = {
