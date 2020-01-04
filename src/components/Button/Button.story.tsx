@@ -11,7 +11,16 @@ storiesOf('Button', module)
   .addDecorator((getStory: StoryDecorator) => (
     <CenterView>{getStory()}</CenterView>
   ))
-  .add('default', () => <Button title="Button" onPress={action('pressed')} />)
-  .add('with "+" icon', () => (
-    <Button icon="+" title="Button" onPress={action('pressed')} />
+  .add('default', () => (
+    <Button title="Demo button" onPress={action('pressed')} />
+  ))
+  .add('with icon', () => (
+    <Button icon="+" title="Demo button" onPress={action('pressed')} />
+  ))
+  .add('short title', () => <Button title="Add" onPress={action('pressed')} />)
+  .add('short title and icon', () => (
+    <Button icon="+" title="Add" onPress={action('pressed')} />
+  ))
+  .add('disabled', () => (
+    <Button title="Submitting..." disabled onPress={action('pressed')} />
   ));

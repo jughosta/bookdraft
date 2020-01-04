@@ -1,14 +1,22 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
 
 import Screen from '../components/Screen';
+import Form from '../components/Form/Form';
+
+import { getBookFormFields } from '../utils/form';
 
 import { NavigationParamsForm } from '../types/navigation.type';
-import { FormMode } from '../types/form.type';
+import { FormMode, FormValues } from '../types/form.type';
+import { Book } from 'src/types/book.type';
+
+interface IState {
+  book?: Book;
+}
 
 class BookFormScreen extends React.Component<
-  NavigationStackScreenProps<NavigationParamsForm>
+  NavigationStackScreenProps<NavigationParamsForm>,
+  IState
 > {
   static navigationOptions = ({
     navigation,
@@ -21,13 +29,20 @@ class BookFormScreen extends React.Component<
     };
   };
 
+  state = {
+    book: undefined,
+  };
+
+  handleSubmit = async (values: FormValues) => {
+    console.warn(values);
+  };
+
   render() {
-    const { navigation } = this.props;
+    const { book } = this.state;
 
     return (
-      <Screen>
-        <Text>Book form screen</Text>
-        <Text>#{navigation.getParam('id')}</Text>
+      <Screen scrollable>
+        <Form fields={getBookFormFields(book)} onSubmit={this.handleSubmit} />
       </Screen>
     );
   }
