@@ -1,4 +1,4 @@
-export enum FetchStates {
+export enum LoadingStatus {
   initial = 'initial',
   loading = 'loading',
   loaded = 'loaded',

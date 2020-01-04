@@ -29,11 +29,6 @@ const AppNavigator = createStackNavigator(
     headerLayoutPreset: 'center',
     defaultNavigationOptions: {
       headerTintColor: Palette.gray.v900,
-      headerStyle: {
-        backgroundColor: Palette.gray.v300,
-        borderBottomWidth: 0,
-        elevation: 0,
-      },
     },
   },
 );
@@ -42,7 +37,7 @@ const AppContainer = createAppContainer(AppNavigator);
 
 const App = () => (
   <Provider store={store}>
-    <StatusBar barStyle="dark-content" backgroundColor={Palette.gray.v300} />
+    <StatusBar barStyle="dark-content" backgroundColor={Palette.white} />
     <StorageProvider />
     <AppContainer />
   </Provider>

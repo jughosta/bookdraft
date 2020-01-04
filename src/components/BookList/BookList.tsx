@@ -60,13 +60,15 @@ class BookList extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 24,
+    paddingTop: 16,
+    paddingHorizontal: 24,
   },
   separator: {
     marginBottom: 16,
   },
   footer: {
     marginTop: 24,
+    marginBottom: 48,
     alignItems: 'flex-start',
   },
 });

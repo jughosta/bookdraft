@@ -26,7 +26,6 @@ const Screen = ({ scrollable, children }: IProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 16,
     color: Palette.gray.v900,
     backgroundColor: Palette.gray.v300,
   },

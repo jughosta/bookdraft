@@ -1,4 +1,5 @@
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 
@@ -6,6 +7,7 @@ import Screen from '../components/Screen';
 import BookList from '../components/BookList/BookList';
 
 import { Screens } from '../utils/navigation';
+import { LoadingStatus } from '../utils/redux';
 
 import { addBook, fetchBooks } from '../reducers/booksSlice';
 
@@ -18,6 +20,7 @@ import { Book, BookData } from '../types/book.type';
 
 interface IProps {
   books: Book[];
+  loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBooks>;
   dispatch: ThunkDispatch;
 }
@@ -52,14 +55,18 @@ class BooksScreen extends React.Component<IProps> {
   };
 
   render() {
-    const { books } = this.props;
+    const { books, loadingStatus } = this.props;
     return (
       <Screen>
-        <BookList
-          books={books}
-          onAdd={this.handleAddBook}
-          onPress={this.handleOpenBook}
-        />
+        {loadingStatus === LoadingStatus.initial ? (
+          <ActivityIndicator />
+        ) : (
+          <BookList
+            books={books}
+            onCreate={this.handleAddBook}
+            onPress={this.handleOpenBook}
+          />
+        )}
       </Screen>
     );
   }
@@ -67,6 +74,7 @@ class BooksScreen extends React.Component<IProps> {
 
 const mapStateToProps = ({ books }: RootState) => ({
   books: books.list,
+  loadingStatus: books.loadingStatus,
 });
 
 export default connect(mapStateToProps)(BooksScreen);
