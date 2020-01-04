@@ -13,6 +13,7 @@ import { Screens } from './utils/navigation';
 import { Palette } from './utils/theme';
 
 import rootReducer from './reducers';
+import BookFormScreen from './screens/BookFormScreen';
 
 const store = configureStore({
   reducer: rootReducer,
@@ -22,6 +23,7 @@ const AppNavigator = createStackNavigator(
   {
     [Screens.Books]: BooksScreen,
     [Screens.Book]: BookScreen,
+    [Screens.BookForm]: BookFormScreen,
   },
   {
     initialRouteName: Screens.Books,

@@ -1,4 +1,11 @@
+import { FormMode } from './form.type';
+
 export type NavigationParamsBooks = {};
+
+export type NavigationParamsForm = {
+  mode: FormMode;
+  id?: number;
+};
 
 export type NavigationParamsBook = {
   bookId: number;
