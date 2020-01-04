@@ -4,6 +4,7 @@ import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 
 import Screen from '../components/Screen';
+import CenterView from '../components/CenterView';
 import BookList from '../components/BookList/BookList';
 
 import { Screens } from '../utils/navigation';
@@ -59,7 +60,9 @@ class BooksScreen extends React.Component<IProps> {
     return (
       <Screen>
         {loadingStatus === LoadingStatus.initial ? (
-          <ActivityIndicator />
+          <CenterView>
+            <ActivityIndicator />
+          </CenterView>
         ) : (
           <BookList
             books={books}

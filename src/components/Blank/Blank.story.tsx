@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 
 import Blank from '../Blank/Blank';
-import CenterView from '../../../storybook/components/CenterView';
+import CenterView from '../CenterView';
 
 import { StoryDecorator } from '../../../storybook/types';
 

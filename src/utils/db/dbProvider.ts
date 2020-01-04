@@ -64,12 +64,12 @@ export const queryAll = async (
   table: string,
   whereStatement?: string,
   params?: any[],
-): Promise<any | undefined> => {
-  if (!dbProvider) {
-    return;
-  }
-
+): Promise<any[] | undefined> => {
   try {
+    if (!dbProvider) {
+      throw Error('DB Provider is not ready!');
+    }
+
     const [resultSets] = await dbProvider.executeSql(
       `SELECT * FROM ${table}${
         whereStatement ? ` WHERE ${whereStatement}` : ''
@@ -86,13 +86,13 @@ export const insert = async (
   table: string,
   data: { [k: string]: any },
 ): Promise<number | undefined> => {
-  if (!dbProvider) {
-    return;
-  }
-
   const columns = Object.keys(data);
 
   try {
+    if (!dbProvider) {
+      throw Error('DB Provider is not ready!');
+    }
+
     const [resultSets] = await dbProvider.executeSql(
       `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns
         .map(() => '?')

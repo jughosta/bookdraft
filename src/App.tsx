@@ -38,8 +38,9 @@ const AppContainer = createAppContainer(AppNavigator);
 const App = () => (
   <Provider store={store}>
     <StatusBar barStyle="dark-content" backgroundColor={Palette.white} />
-    <StorageProvider />
-    <AppContainer />
+    <StorageProvider>
+      <AppContainer />
+    </StorageProvider>
   </Provider>
 );
 

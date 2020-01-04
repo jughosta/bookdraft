@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ViewStyle } from 'react-native';
 
-import { Palette } from '../../src/utils/theme';
+import { Palette } from '../utils/theme';
 
 interface IProps {
   usesFullWidth?: boolean;

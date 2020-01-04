@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 
 import BookList from '../BookList/BookList';
-import CenterView from '../../../storybook/components/CenterView';
+import CenterView from '../CenterView';
 
 import { StoryDecorator } from '../../../storybook/types';
 import { Book } from '../../types/book.type';
