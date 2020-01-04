@@ -2,9 +2,9 @@ import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import BookCard from '../BookCard/BookCard';
+import Button from '../Button/Button';
 
 import { Book } from '../../types/book.type';
-import Button from '../Button/Button';
 
 interface IProps {
   books: Book[];

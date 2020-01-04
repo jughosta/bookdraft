@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 
-import { Colors } from '../utils/theme';
+import { Palette } from '../utils/theme';
 
 interface IProps {
   scrollable?: boolean;
@@ -26,8 +26,9 @@ const Screen = ({ scrollable, children }: IProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    color: Colors.dark,
-    backgroundColor: Colors.lighter,
+    paddingTop: 16,
+    color: Palette.gray.v900,
+    backgroundColor: Palette.gray.v300,
   },
 });
 

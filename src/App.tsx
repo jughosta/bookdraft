@@ -10,7 +10,7 @@ import BookScreen from './screens/BookScreen';
 import StorageProvider from './components/StorageProvider';
 
 import { Screens } from './utils/navigation';
-import { Colors } from './utils/theme';
+import { Palette } from './utils/theme';
 
 import rootReducer from './reducers';
 
@@ -28,9 +28,9 @@ const AppNavigator = createStackNavigator(
     headerBackTitleVisible: false,
     headerLayoutPreset: 'center',
     defaultNavigationOptions: {
-      headerTintColor: Colors.dark,
+      headerTintColor: Palette.gray.v900,
       headerStyle: {
-        backgroundColor: Colors.lighter,
+        backgroundColor: Palette.gray.v300,
         borderBottomWidth: 0,
         elevation: 0,
       },
@@ -42,7 +42,7 @@ const AppContainer = createAppContainer(AppNavigator);
 
 const App = () => (
   <Provider store={store}>
-    <StatusBar barStyle="dark-content" backgroundColor={Colors.lighter} />
+    <StatusBar barStyle="dark-content" backgroundColor={Palette.gray.v300} />
     <StorageProvider />
     <AppContainer />
   </Provider>

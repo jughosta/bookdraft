@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ViewStyle } from 'react-native';
 
-import { Colors } from '../../src/utils/theme';
+import { Palette } from '../../src/utils/theme';
 
 interface IProps {
   usesFullWidth?: boolean;
@@ -17,7 +17,7 @@ const CenterView = ({ usesFullWidth, children }: IProps) => (
 const commonStyles: ViewStyle = {
   flex: 1,
   justifyContent: 'center',
-  backgroundColor: Colors.lighter,
+  backgroundColor: Palette.gray.v300,
 };
 
 const styles = StyleSheet.create({

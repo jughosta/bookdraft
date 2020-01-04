@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextStyle, View } from 'react-native';
 
 import Touchable from '../Touchable';
 
-import { Colors } from '../../utils/theme';
+import { Palette } from '../../utils/theme';
 
 interface IProps {
   icon?: '+';
@@ -22,7 +22,7 @@ const Button = ({ icon, title, onPress }: IProps) => (
 
 const textStyle: TextStyle = {
   fontWeight: '600',
-  color: Colors.white,
+  color: Palette.white,
 };
 
 const styles = StyleSheet.create({
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 16,
-    backgroundColor: Colors.primary,
+    backgroundColor: Palette.gray.v800,
     flexDirection: 'row',
     alignItems: 'center',
   },
