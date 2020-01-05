@@ -16,7 +16,6 @@ import {
 
 import {
   NavigationParamsChapterItemForm,
-  NavigationParamsChapterItem,
   NavigationParamsChapter,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
@@ -43,14 +42,15 @@ class ChaptersItemsContainer extends React.Component<IProps> {
     dispatch(resetChapterItems());
   }
 
-  handleOpen = (chapterItem: IChapterItem) => {
+  handleEdit = (chapterItem: IChapterItem) => {
     const { navigation } = this.props;
 
-    const params: NavigationParamsChapterItem = {
-      chapterItemId: chapterItem.id,
+    const params: NavigationParamsChapterItemForm = {
+      chapterId: chapterItem.chapterId,
+      chapterItem,
     };
 
-    navigation.navigate(Screens.ChapterItem, params);
+    navigation.navigate(Screens.ChapterItemForm, params);
   };
 
   handleCreate = () => {
@@ -75,7 +75,7 @@ class ChaptersItemsContainer extends React.Component<IProps> {
           <ChapterItemList
             chapterItems={chapterItems}
             onCreate={this.handleCreate}
-            onPress={this.handleOpen}
+            onPress={this.handleEdit}
           />
         )}
       </React.Fragment>

@@ -16,6 +16,7 @@ import rootReducer from './reducers';
 import BookFormScreen from './screens/BookFormScreen';
 import ChapterScreen from './screens/ChapterScreen';
 import ChapterFormScreen from './screens/ChapterFormScreen';
+import ChapterItemFormScreen from './screens/ChapterItemFormScreen';
 
 const store = configureStore({
   reducer: rootReducer,
@@ -28,6 +29,7 @@ const AppNavigator = createStackNavigator(
     [Screens.BookForm]: BookFormScreen,
     [Screens.Chapter]: ChapterScreen,
     [Screens.ChapterForm]: ChapterFormScreen,
+    [Screens.ChapterItemForm]: ChapterItemFormScreen,
   },
   {
     initialRouteName: Screens.Books,

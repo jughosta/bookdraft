@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Picker } from 'react-native';
 
 import { Palette } from '../../utils/theme';
 
@@ -32,18 +32,35 @@ class FormInput extends React.Component<IProps> {
   }
 
   renderFieldTextarea() {
+    const { value } = this.props;
+
     return (
-      <View>
-        <Text>Multiline field here</Text>
-      </View>
+      <TextInput
+        multiline
+        style={styles.textareaInput}
+        value={value}
+        underlineColorAndroid="transparent"
+        onChangeText={this.handleChange}
+      />
     );
   }
 
   renderFieldSelect() {
+    const { value, field } = this.props;
+
     return (
-      <View>
-        <Text>Dropdown here</Text>
-      </View>
+      <Picker
+        selectedValue={value}
+        style={styles.pickerInput}
+        onValueChange={this.handleChange}>
+        {(field.options || []).map(option => (
+          <Picker.Item
+            label={option.label}
+            value={option.value}
+            key={option.value}
+          />
+        ))}
+      </Picker>
     );
   }
 
@@ -95,6 +112,11 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 0,
   },
+  textareaInput: {
+    borderWidth: 0,
+    height: 300,
+  },
+  pickerInput: {},
 });
 
 export default FormInput;
