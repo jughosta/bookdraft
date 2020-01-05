@@ -11,29 +11,33 @@ import Form from '../components/Form/Form';
 import Touchable from '../components/Touchable';
 import IconTrash from '../icons/IconTrash';
 
-import { createBook, deleteBook, editBook } from '../reducers/bookSlice';
+import {
+  createChapter,
+  deleteChapter,
+  editChapter,
+} from '../reducers/chapterSlice';
 
-import { getBookFormFields } from '../utils/form';
+import { getChapterFormFields } from '../utils/form';
 import { Palette } from '../utils/theme';
 
-import { NavigationParamsBookForm } from '../types/navigation.type';
+import { NavigationParamsChapterForm } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
-import { IBookData } from 'src/types/book.type';
+import { IChapterData } from 'src/types/chapter.type';
 import { ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsBookForm>;
+  navigation: NavigationStackProp<NavigationParamsChapterForm>;
   dispatch: ThunkDispatch;
 }
 
-class BookFormScreen extends React.Component<IProps> {
+class ChapterFormScreen extends React.Component<IProps> {
   static navigationOptions = ({
     navigation,
-  }: NavigationStackScreenProps<NavigationParamsBookForm>) => {
+  }: NavigationStackScreenProps<NavigationParamsChapterForm>) => {
     return {
-      title: navigation.getParam('book') ? 'Book details' : 'New book',
+      title: navigation.getParam('chapter') ? 'Chapter details' : 'New chapter',
       headerRight: () =>
-        navigation.getParam('book') ? (
+        navigation.getParam('chapter') ? (
           <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
             <IconTrash fillColor={Palette.gray.v900} size={20} />
           </Touchable>
@@ -43,9 +47,9 @@ class BookFormScreen extends React.Component<IProps> {
 
   componentDidMount(): void {
     const { navigation } = this.props;
-    const book = navigation.getParam('book');
+    const chapter = navigation.getParam('chapter');
 
-    if (book) {
+    if (chapter) {
       navigation.setParams({
         onConfirmDeletion: this.handleConfirmDeletion,
       });
@@ -56,7 +60,7 @@ class BookFormScreen extends React.Component<IProps> {
     const { navigation, dispatch } = this.props;
 
     try {
-      await dispatch(deleteBook(navigation.getParam('book').id));
+      await dispatch(deleteChapter(navigation.getParam('chapter').id));
       navigation.pop(2);
     } catch (error) {
       console.warn(error);
@@ -66,7 +70,7 @@ class BookFormScreen extends React.Component<IProps> {
   handleConfirmDeletion = () => {
     Alert.alert(
       'Heads up!',
-      'Are you sure you want to delete this book and its content?',
+      'Are you sure you want to delete this chapter and its content?',
       [
         {
           text: 'Cancel',
@@ -84,16 +88,17 @@ class BookFormScreen extends React.Component<IProps> {
 
   handleSubmit = async (values: FormValues) => {
     const { navigation, dispatch } = this.props;
-    const bookId = navigation.getParam('book', {}).id;
-    const bookData: IBookData = {
+    const chapterId = navigation.getParam('chapter', {}).id;
+    const chapterData: IChapterData = {
       title: values.title,
+      bookId: navigation.getParam('bookId'),
     };
 
     try {
-      if (bookId) {
-        await dispatch(editBook(bookId, bookData));
+      if (chapterId) {
+        await dispatch(editChapter(chapterId, chapterData));
       } else {
-        await dispatch(createBook(bookData));
+        await dispatch(createChapter(chapterData));
       }
       navigation.goBack();
     } catch (error) {
@@ -103,10 +108,13 @@ class BookFormScreen extends React.Component<IProps> {
 
   renderContent() {
     const { navigation } = this.props;
-    const book = navigation.getParam('book');
+    const chapter = navigation.getParam('chapter');
 
     return (
-      <Form fields={getBookFormFields(book)} onSubmit={this.handleSubmit} />
+      <Form
+        fields={getChapterFormFields(chapter)}
+        onSubmit={this.handleSubmit}
+      />
     );
   }
 
@@ -115,4 +123,4 @@ class BookFormScreen extends React.Component<IProps> {
   }
 }
 
-export default connect()(BookFormScreen);
+export default connect()(ChapterFormScreen);

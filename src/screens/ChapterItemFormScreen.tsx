@@ -11,29 +11,33 @@ import Form from '../components/Form/Form';
 import Touchable from '../components/Touchable';
 import IconTrash from '../icons/IconTrash';
 
-import { createBook, deleteBook, editBook } from '../reducers/bookSlice';
+import {
+  createChapterItem,
+  deleteChapterItem,
+  editChapterItem,
+} from '../reducers/chapterItemSlice';
 
-import { getBookFormFields } from '../utils/form';
+import { getChapterItemFormFields } from '../utils/form';
 import { Palette } from '../utils/theme';
 
-import { NavigationParamsBookForm } from '../types/navigation.type';
+import { NavigationParamsChapterItemForm } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
-import { IBookData } from 'src/types/book.type';
+import { ChapterItemState, IChapterItemData } from 'src/types/chapterItem.type';
 import { ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsBookForm>;
+  navigation: NavigationStackProp<NavigationParamsChapterItemForm>;
   dispatch: ThunkDispatch;
 }
 
-class BookFormScreen extends React.Component<IProps> {
+class ChapterItemFormScreen extends React.Component<IProps> {
   static navigationOptions = ({
     navigation,
-  }: NavigationStackScreenProps<NavigationParamsBookForm>) => {
+  }: NavigationStackScreenProps<NavigationParamsChapterItemForm>) => {
     return {
-      title: navigation.getParam('book') ? 'Book details' : 'New book',
+      title: navigation.getParam('chapterItem') ? 'Scene' : 'New scene',
       headerRight: () =>
-        navigation.getParam('book') ? (
+        navigation.getParam('chapterItem') ? (
           <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
             <IconTrash fillColor={Palette.gray.v900} size={20} />
           </Touchable>
@@ -43,9 +47,9 @@ class BookFormScreen extends React.Component<IProps> {
 
   componentDidMount(): void {
     const { navigation } = this.props;
-    const book = navigation.getParam('book');
+    const chapterItem = navigation.getParam('chapterItem');
 
-    if (book) {
+    if (chapterItem) {
       navigation.setParams({
         onConfirmDeletion: this.handleConfirmDeletion,
       });
@@ -56,8 +60,8 @@ class BookFormScreen extends React.Component<IProps> {
     const { navigation, dispatch } = this.props;
 
     try {
-      await dispatch(deleteBook(navigation.getParam('book').id));
-      navigation.pop(2);
+      await dispatch(deleteChapterItem(navigation.getParam('chapterItem').id));
+      navigation.goBack();
     } catch (error) {
       console.warn(error);
     }
@@ -66,7 +70,7 @@ class BookFormScreen extends React.Component<IProps> {
   handleConfirmDeletion = () => {
     Alert.alert(
       'Heads up!',
-      'Are you sure you want to delete this book and its content?',
+      'Are you sure you want to delete this scene?',
       [
         {
           text: 'Cancel',
@@ -84,16 +88,18 @@ class BookFormScreen extends React.Component<IProps> {
 
   handleSubmit = async (values: FormValues) => {
     const { navigation, dispatch } = this.props;
-    const bookId = navigation.getParam('book', {}).id;
-    const bookData: IBookData = {
-      title: values.title,
+    const chapterItemId = navigation.getParam('chapterItem', {}).id;
+    const chapterItemData: IChapterItemData = {
+      content: values.content,
+      state: values.state as ChapterItemState,
+      chapterId: navigation.getParam('chapterId'),
     };
 
     try {
-      if (bookId) {
-        await dispatch(editBook(bookId, bookData));
+      if (chapterItemId) {
+        await dispatch(editChapterItem(chapterItemId, chapterItemData));
       } else {
-        await dispatch(createBook(bookData));
+        await dispatch(createChapterItem(chapterItemData));
       }
       navigation.goBack();
     } catch (error) {
@@ -103,10 +109,13 @@ class BookFormScreen extends React.Component<IProps> {
 
   renderContent() {
     const { navigation } = this.props;
-    const book = navigation.getParam('book');
+    const chapterItem = navigation.getParam('chapterItem');
 
     return (
-      <Form fields={getBookFormFields(book)} onSubmit={this.handleSubmit} />
+      <Form
+        fields={getChapterItemFormFields(chapterItem)}
+        onSubmit={this.handleSubmit}
+      />
     );
   }
 
@@ -115,4 +124,4 @@ class BookFormScreen extends React.Component<IProps> {
   }
 }
 
-export default connect()(BookFormScreen);
+export default connect()(ChapterItemFormScreen);

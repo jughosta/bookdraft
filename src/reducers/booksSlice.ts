@@ -38,6 +38,9 @@ const booksSlice = createSlice({
         state.list.splice(prevBookIndex, 1);
       }
     },
+    reset() {
+      return initialState;
+    },
   },
 });
 
@@ -47,6 +50,7 @@ const {
   created,
   edited,
   deleted,
+  reset,
 } = booksSlice.actions;
 
 export const fetchBooks = (): ThunkResult<Promise<void>> => async (
@@ -76,5 +80,7 @@ export const bookEdited = (book: IBook) => (dispatch: ThunkDispatch) =>
 
 export const bookDeleted = (bookId: number) => (dispatch: ThunkDispatch) =>
   dispatch(deleted(bookId));
+
+export const resetBooks = () => (dispatch: ThunkDispatch) => dispatch(reset());
 
 export default booksSlice.reducer;

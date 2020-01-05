@@ -4,11 +4,17 @@ export enum FormFieldShape {
   select = 'select',
 }
 
+export type FormFieldOption = {
+  label: string;
+  value: string;
+};
+
 export type FormField = {
   name: string;
   label: string;
   shape: FormFieldShape;
   defaultValue: string;
+  options?: FormFieldOption[];
 };
 
 export type FormValues = {

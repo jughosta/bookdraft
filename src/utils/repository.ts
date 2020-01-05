@@ -1,11 +1,17 @@
-import { queryAll, insert, update, destroy } from './db/dbProvider';
+import { destroy, insert, queryAll, update } from './db/dbProvider';
 import { DBTable } from './db/dbTables';
 
 import { IBook, IBookData } from '../types/book.type';
 import { IEntityData } from '../types/entity';
+import { IChapter, IChapterData } from '../types/chapter.type';
+import { IChapterItem, IChapterItemData } from '../types/chapterItem.type';
 
-export const getEntities = async <T>(table: string): Promise<T[]> => {
-  const entities = await queryAll(table);
+export const getEntities = async <T>(
+  table: DBTable,
+  whereStatement?: string,
+  params?: any[],
+): Promise<T[]> => {
+  const entities = await queryAll(table, whereStatement, params);
 
   if (!entities) {
     throw Error('No entities found');
@@ -15,7 +21,7 @@ export const getEntities = async <T>(table: string): Promise<T[]> => {
 };
 
 export const getEntity = async <T>(table: DBTable, id: number): Promise<T> => {
-  const entities = await queryAll(table, 'id = ?', [id]);
+  const entities = await queryAll(table, 'id = ? LIMIT 1', [id]);
 
   if (!entities || entities.length !== 1) {
     throw Error('This entity does not exist');
@@ -76,3 +82,40 @@ export const updateBook = (id: number, data: IBookData): Promise<IBook> =>
 
 export const destroyBook = (id: number): Promise<void> =>
   destroyEntity<IBook>(DBTable.book, id);
+
+export const getChapters = (bookId: number): Promise<IChapter[]> =>
+  getEntities<IChapter>(DBTable.chapter, 'bookId = ?', [bookId]);
+
+export const getChapter = (id: number): Promise<IChapter> =>
+  getEntity<IChapter>(DBTable.chapter, id);
+
+export const insertChapter = (data: IChapterData): Promise<IChapter> =>
+  insertEntity<IChapter>(DBTable.chapter, data);
+
+export const updateChapter = (
+  id: number,
+  data: IChapterData,
+): Promise<IChapter> => updateEntity<IChapter>(DBTable.chapter, id, data);
+
+export const destroyChapter = (id: number): Promise<void> =>
+  destroyEntity<IChapter>(DBTable.chapter, id);
+
+export const getChapterItems = (chapterId: number): Promise<IChapterItem[]> =>
+  getEntities<IChapterItem>(DBTable.chapterItem, 'chapterId = ?', [chapterId]);
+
+export const getChapterItem = (id: number): Promise<IChapterItem> =>
+  getEntity<IChapterItem>(DBTable.chapterItem, id);
+
+export const insertChapterItem = (
+  data: IChapterItemData,
+): Promise<IChapterItem> =>
+  insertEntity<IChapterItem>(DBTable.chapterItem, data);
+
+export const updateChapterItem = (
+  id: number,
+  data: IChapterItemData,
+): Promise<IChapterItem> =>
+  updateEntity<IChapterItem>(DBTable.chapterItem, id, data);
+
+export const destroyChapterItem = (id: number): Promise<void> =>
+  destroyEntity<IChapterItem>(DBTable.chapterItem, id);
