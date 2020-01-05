@@ -4,9 +4,3 @@ export enum LoadingStatus {
   loaded = 'loaded',
   failed = 'failed',
 }
-export enum UpdatingStatus {
-  initial = 'initial',
-  processing = 'processing',
-  succeeded = 'succeeded',
-  failed = 'failed',
-}

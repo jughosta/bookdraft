@@ -1,8 +1,3 @@
-export enum FormMode {
-  create = 'create',
-  edit = 'edit',
-}
-
 export enum FormFieldShape {
   text = 'text',
   textarea = 'textarea',

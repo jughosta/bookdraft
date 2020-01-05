@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import Button from '../Button/Button';
 import FormInput from '../FormInput/FormInput';
+
+import { FormSubmittingStatus } from '../../utils/form';
 
 import { FormField, FormValues } from '../../types/form.type';
 
@@ -13,6 +15,7 @@ interface IProps {
 
 interface IState {
   values: FormValues;
+  status: FormSubmittingStatus;
 }
 
 class Form extends React.Component<IProps, IState> {
@@ -21,6 +24,7 @@ class Form extends React.Component<IProps, IState> {
       values[field.name] = field.defaultValue;
       return values;
     }, {}),
+    status: FormSubmittingStatus.initial,
   };
 
   handleChange = (value: string, field: FormField) => {
@@ -42,13 +46,28 @@ class Form extends React.Component<IProps, IState> {
     const { onSubmit } = this.props;
     const { values } = this.state;
 
-    // TODO: add validation and show errors
-    await onSubmit(values);
+    this.setState({
+      status: FormSubmittingStatus.processing,
+    });
+
+    try {
+      // TODO: add validation and show errors
+      await onSubmit(values);
+
+      this.setState({
+        status: FormSubmittingStatus.succeeded,
+      });
+    } catch (error) {
+      this.setState({
+        status: FormSubmittingStatus.failed,
+      });
+    }
   };
 
   render() {
     const { fields } = this.props;
-    const { values } = this.state;
+    const { values, status } = this.state;
+    const isSubmitting = status === FormSubmittingStatus.processing;
 
     return (
       <View style={styles.container}>
@@ -64,7 +83,11 @@ class Form extends React.Component<IProps, IState> {
           </View>
         ))}
         <View style={styles.action}>
-          <Button title="Submit" onPress={this.handleSubmit} />
+          <Button
+            title={isSubmitting ? 'Submitting...' : 'Submit'}
+            disabled={isSubmitting}
+            onPress={this.handleSubmit}
+          />
         </View>
       </View>
     );

@@ -1,4 +1,4 @@
-import { queryAll, insert } from './db/dbProvider';
+import { queryAll, insert, update } from './db/dbProvider';
 import { Tables } from './db/dbTables';
 
 import { Book, BookData } from '../types/book.type';
@@ -23,11 +23,24 @@ export const getBook = async (bookId: number): Promise<Book> => {
   return books[0];
 };
 
-export const saveBook = async (bookData: BookData): Promise<Book> => {
+export const insertBook = async (bookData: BookData): Promise<Book> => {
   const bookId = await insert(Tables.book, bookData);
 
   if (!bookId) {
     throw Error('Error while creating a book');
+  }
+
+  return await getBook(bookId);
+};
+
+export const updateBook = async (
+  bookId: number,
+  bookData: BookData,
+): Promise<Book> => {
+  const rowsAffected = await update(Tables.book, bookId, bookData);
+
+  if (!rowsAffected || rowsAffected !== 1) {
+    throw Error('Error while updating the book');
   }
 
   return await getBook(bookId);

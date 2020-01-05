@@ -110,3 +110,33 @@ export const insert = async (
     console.warn(error);
   }
 };
+
+export const update = async (
+  table: string,
+  id: number,
+  data: { [k: string]: any },
+): Promise<number | undefined> => {
+  const columns = Object.keys(data);
+
+  try {
+    if (!dbProvider) {
+      throw Error('DB Provider is not ready!');
+    }
+
+    const [resultSets] = await dbProvider.executeSql(
+      `UPDATE ${table} SET ${columns
+        .map(column => `${column} = ?`)
+        .join(', ')}`,
+      columns.reduce(
+        (arr, next) => {
+          arr.push(data[next]);
+          return arr;
+        },
+        <any[]>[],
+      ),
+    );
+    return resultSets.rowsAffected;
+  } catch (error) {
+    console.warn(error);
+  }
+};
