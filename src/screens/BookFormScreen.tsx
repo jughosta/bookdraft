@@ -67,10 +67,15 @@ class BookFormScreen extends React.Component<IProps> {
       title: values.title,
     };
 
-    if (bookId) {
-      await dispatch(editBook(bookId, bookData));
-    } else {
-      await dispatch(createBook(bookData));
+    try {
+      if (bookId) {
+        await dispatch(editBook(bookId, bookData));
+      } else {
+        await dispatch(createBook(bookData));
+      }
+      navigation.goBack();
+    } catch (error) {
+      console.warn(error);
     }
   };
 

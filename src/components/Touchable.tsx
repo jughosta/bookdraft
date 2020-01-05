@@ -9,11 +9,11 @@ import {
 interface IProps {
   disabled?: boolean;
   children: JSX.Element;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 const Touchable = ({ disabled, children, onPress }: IProps) => {
-  if (disabled) {
+  if (disabled || !onPress) {
     return <View>{children}</View>;
   }
 

@@ -6,6 +6,7 @@ export type NavigationParamsForm = {
 
 export type NavigationParamsBook = {
   bookId: number;
+  onHeaderRightPressed?: () => void;
 };
 
 export type NavigationParamsChapter = {

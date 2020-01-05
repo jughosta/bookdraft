@@ -5,7 +5,7 @@ import { Palette } from '../utils/theme';
 
 interface IProps {
   scrollable?: boolean;
-  children: JSX.Element[] | JSX.Element;
+  children: JSX.Element[] | JSX.Element | null;
 }
 
 const Screen = ({ scrollable, children }: IProps) => {

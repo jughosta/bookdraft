@@ -10,7 +10,7 @@ import BookList from '../components/BookList/BookList';
 import { Screens } from '../utils/navigation';
 import { LoadingStatus } from '../utils/redux';
 
-import { addBook, fetchBooks } from '../reducers/booksSlice';
+import { fetchBooks } from '../reducers/booksSlice';
 
 import {
   NavigationParamsBook,
@@ -18,8 +18,7 @@ import {
   NavigationParamsForm,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
-import { Book, BookData } from '../types/book.type';
-import { FormMode } from '../types/form.type';
+import { Book } from '../types/book.type';
 
 interface IProps {
   books: Book[];
@@ -51,21 +50,9 @@ class BooksScreen extends React.Component<IProps> {
 
   handleCreateBook = () => {
     const { navigation } = this.props;
-    const params: NavigationParamsForm = {
-      mode: FormMode.create,
-    };
+    const params: NavigationParamsForm = {};
 
     navigation.navigate(Screens.BookForm, params);
-  };
-
-  // TODO: remove
-  handleAddBook = () => {
-    const { dispatch } = this.props;
-    const bookPayload: BookData = {
-      title: 'Text',
-    };
-
-    dispatch(addBook(bookPayload));
   };
 
   render() {

@@ -93,17 +93,19 @@ export const insert = async (
       throw Error('DB Provider is not ready!');
     }
 
+    const params = columns.reduce(
+      (arr, next) => {
+        arr.push(data[next]);
+        return arr;
+      },
+      <any[]>[],
+    );
+
     const [resultSets] = await dbProvider.executeSql(
       `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns
         .map(() => '?')
         .join(', ')})`,
-      columns.reduce(
-        (arr, next) => {
-          arr.push(data[next]);
-          return arr;
-        },
-        <any[]>[],
-      ),
+      params,
     );
     return resultSets.insertId;
   } catch (error) {
@@ -123,17 +125,21 @@ export const update = async (
       throw Error('DB Provider is not ready!');
     }
 
+    const params = columns.reduce(
+      (arr, next) => {
+        arr.push(data[next]);
+        return arr;
+      },
+      <any[]>[],
+    );
+
+    params.push(id);
+
     const [resultSets] = await dbProvider.executeSql(
       `UPDATE ${table} SET ${columns
         .map(column => `${column} = ?`)
-        .join(', ')}`,
-      columns.reduce(
-        (arr, next) => {
-          arr.push(data[next]);
-          return arr;
-        },
-        <any[]>[],
-      ),
+        .join(', ')} WHERE id = ?`,
+      params,
     );
     return resultSets.rowsAffected;
   } catch (error) {
