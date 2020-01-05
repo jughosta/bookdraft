@@ -1,5 +1,6 @@
 import { FormField, FormFieldShape } from '../types/form.type';
 import { INullableBook } from '../types/book.type';
+import { INullableChapter } from '../types/chapter.type';
 
 export enum FormSubmittingStatus {
   initial = 'initial',
@@ -14,5 +15,16 @@ export const getBookFormFields = (book?: INullableBook): FormField[] => [
     label: 'Title',
     shape: FormFieldShape.text,
     defaultValue: book ? book.title : '',
+  },
+];
+
+export const getChapterFormFields = (
+  chapter?: INullableChapter,
+): FormField[] => [
+  {
+    name: 'title',
+    label: 'Title',
+    shape: FormFieldShape.text,
+    defaultValue: chapter ? chapter.title : '',
   },
 ];

@@ -35,15 +35,11 @@ class ChapterList extends React.Component<IProps> {
   renderFooter = () => {
     const { onCreate } = this.props;
 
-    return (
-      <View style={styles.content}>
-        <Button icon="+" title="Create chapter" onPress={onCreate} />
-      </View>
-    );
+    return <Button icon="+" title="Create chapter" onPress={onCreate} />;
   };
 
   renderEmpty = () => (
-    <View style={styles.content}>
+    <View style={styles.empty}>
       <Blank message="No chapters here yet." />
     </View>
   );
@@ -53,7 +49,6 @@ class ChapterList extends React.Component<IProps> {
 
     return (
       <FlatList
-        style={styles.container}
         data={chapters}
         keyExtractor={this.getKeyExtractor}
         renderItem={this.renderItem}
@@ -67,21 +62,20 @@ class ChapterList extends React.Component<IProps> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 16,
+  separator: {
+    borderBottomColor: Palette.gray.v300,
+    borderBottomWidth: 1,
+  },
+  empty: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     backgroundColor: Palette.white,
   },
-  separator: {
-    borderColor: Palette.gray.v400,
-    borderWidth: 2,
-  },
   footer: {
-    marginTop: 24,
+    paddingTop: 24,
     marginBottom: 48,
-    alignItems: 'flex-start',
-  },
-  content: {
     paddingHorizontal: 24,
+    alignItems: 'flex-start',
   },
 });
 

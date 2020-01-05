@@ -18,6 +18,7 @@ export type NavigationParamsChapter = {
 };
 
 export type NavigationParamsChapterForm = {
+  bookId: number;
   chapter?: IChapter;
   onConfirmDeletion?: () => void;
 };

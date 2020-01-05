@@ -51,8 +51,10 @@ class ChaptersContainer extends React.Component<IProps> {
   };
 
   handleCreate = () => {
-    const { navigation } = this.props;
-    const params: NavigationParamsChapterForm = {};
+    const { bookId, navigation } = this.props;
+    const params: NavigationParamsChapterForm = {
+      bookId,
+    };
 
     navigation.navigate(Screens.ChapterForm, params);
   };
