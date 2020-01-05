@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextStyle, View } from 'react-native';
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 import Touchable from '../Touchable';
 
@@ -7,13 +7,14 @@ import { Palette } from '../../utils/theme';
 
 interface IProps {
   icon?: '+';
+  disabled?: boolean;
   title: string;
   onPress: () => void;
 }
 
-const Button = ({ icon, title, onPress }: IProps) => (
-  <Touchable onPress={onPress}>
-    <View style={styles.content}>
+const Button = ({ icon, disabled, title, onPress }: IProps) => (
+  <Touchable onPress={onPress} disabled={disabled}>
+    <View style={disabled ? styles.buttonDisabled : styles.button}>
       {Boolean(icon) && <Text style={styles.icon}>{icon}</Text>}
       <Text style={styles.title}>{title}</Text>
     </View>
@@ -25,14 +26,24 @@ const textStyle: TextStyle = {
   color: Palette.white,
 };
 
+const buttonStyle: ViewStyle = {
+  minWidth: 120,
+  paddingVertical: 8,
+  paddingHorizontal: 16,
+  borderRadius: 16,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
 const styles = StyleSheet.create({
-  content: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 16,
+  button: {
+    ...buttonStyle,
     backgroundColor: Palette.gray.v800,
-    flexDirection: 'row',
-    alignItems: 'center',
+  },
+  buttonDisabled: {
+    ...buttonStyle,
+    backgroundColor: Palette.gray.v500,
   },
   title: {
     ...textStyle,

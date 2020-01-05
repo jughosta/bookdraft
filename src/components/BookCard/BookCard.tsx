@@ -6,11 +6,11 @@ import IconBook from '../../icons/IconBook';
 
 import { Palette } from '../../utils/theme';
 
-import { Book } from '../../types/book.type';
+import { IBook } from '../../types/book.type';
 
 interface IProps {
-  book: Book;
-  onPress: (book: Book) => void;
+  book: IBook;
+  onPress: (book: IBook) => void;
 }
 
 class BookCard extends React.Component<IProps> {
@@ -44,6 +44,7 @@ class BookCard extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
   container: {
+    height: 80,
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 4,
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    flexWrap: 'nowrap',
     flexDirection: 'row',
     alignItems: 'center',
   },

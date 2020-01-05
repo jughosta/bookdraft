@@ -93,19 +93,74 @@ export const insert = async (
       throw Error('DB Provider is not ready!');
     }
 
+    const params = columns.reduce(
+      (arr, next) => {
+        arr.push(data[next]);
+        return arr;
+      },
+      <any[]>[],
+    );
+
     const [resultSets] = await dbProvider.executeSql(
       `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns
         .map(() => '?')
         .join(', ')})`,
-      columns.reduce(
-        (arr, next) => {
-          arr.push(data[next]);
-          return arr;
-        },
-        <any[]>[],
-      ),
+      params,
     );
     return resultSets.insertId;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const update = async (
+  table: string,
+  id: number,
+  data: { [k: string]: any },
+): Promise<number | undefined> => {
+  const columns = Object.keys(data);
+
+  try {
+    if (!dbProvider) {
+      throw Error('DB Provider is not ready!');
+    }
+
+    const params = columns.reduce(
+      (arr, next) => {
+        arr.push(data[next]);
+        return arr;
+      },
+      <any[]>[],
+    );
+
+    params.push(id);
+
+    const [resultSets] = await dbProvider.executeSql(
+      `UPDATE ${table} SET ${columns
+        .map(column => `${column} = ?`)
+        .join(', ')} WHERE id = ?`,
+      params,
+    );
+    return resultSets.rowsAffected;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const destroy = async (
+  table: string,
+  id: number,
+): Promise<number | undefined> => {
+  try {
+    if (!dbProvider) {
+      throw Error('DB Provider is not ready!');
+    }
+
+    const [resultSets] = await dbProvider.executeSql(
+      `DELETE FROM ${table} WHERE id = ?`,
+      [id],
+    );
+    return resultSets.rowsAffected;
   } catch (error) {
     console.warn(error);
   }
