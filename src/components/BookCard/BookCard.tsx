@@ -6,11 +6,11 @@ import IconBook from '../../icons/IconBook';
 
 import { Palette } from '../../utils/theme';
 
-import { Book } from '../../types/book.type';
+import { IBook } from '../../types/book.type';
 
 interface IProps {
-  book: Book;
-  onPress: (book: Book) => void;
+  book: IBook;
+  onPress: (book: IBook) => void;
 }
 
 class BookCard extends React.Component<IProps> {

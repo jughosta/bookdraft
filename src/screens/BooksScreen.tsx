@@ -18,10 +18,10 @@ import {
   NavigationParamsForm,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
-import { Book } from '../types/book.type';
+import { IBook } from '../types/book.type';
 
 interface IProps {
-  books: Book[];
+  books: IBook[];
   loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBooks>;
   dispatch: ThunkDispatch;
@@ -38,7 +38,7 @@ class BooksScreen extends React.Component<IProps> {
     dispatch(fetchBooks());
   }
 
-  handleOpenBook = (book: Book) => {
+  handleOpenBook = (book: IBook) => {
     const { navigation } = this.props;
 
     const params: NavigationParamsBook = {

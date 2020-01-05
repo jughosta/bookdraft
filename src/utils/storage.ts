@@ -1,9 +1,9 @@
 import { queryAll, insert, update, destroy } from './db/dbProvider';
 import { Tables } from './db/dbTables';
 
-import { Book, BookData } from '../types/book.type';
+import { IBook, IBookData } from '../types/book.type';
 
-export const getBooks = async (): Promise<Book[]> => {
+export const getBooks = async (): Promise<IBook[]> => {
   const books = await queryAll(Tables.book);
 
   if (!books) {
@@ -13,7 +13,7 @@ export const getBooks = async (): Promise<Book[]> => {
   return books;
 };
 
-export const getBook = async (bookId: number): Promise<Book> => {
+export const getBook = async (bookId: number): Promise<IBook> => {
   const books = await queryAll(Tables.book, 'id = ?', [bookId]);
 
   if (!books || books.length !== 1) {
@@ -23,7 +23,7 @@ export const getBook = async (bookId: number): Promise<Book> => {
   return books[0];
 };
 
-export const insertBook = async (bookData: BookData): Promise<Book> => {
+export const insertBook = async (bookData: IBookData): Promise<IBook> => {
   const bookId = await insert(Tables.book, bookData);
 
   if (!bookId) {
@@ -35,8 +35,8 @@ export const insertBook = async (bookData: BookData): Promise<Book> => {
 
 export const updateBook = async (
   bookId: number,
-  bookData: BookData,
-): Promise<Book> => {
+  bookData: IBookData,
+): Promise<IBook> => {
   const rowsAffected = await update(Tables.book, bookId, bookData);
 
   if (!rowsAffected || rowsAffected !== 1) {

@@ -1,5 +1,5 @@
 import { FormField, FormFieldShape } from '../types/form.type';
-import { NullableBook } from '../types/book.type';
+import { INullableBook } from '../types/book.type';
 
 export enum FormSubmittingStatus {
   initial = 'initial',
@@ -8,7 +8,7 @@ export enum FormSubmittingStatus {
   failed = 'failed',
 }
 
-export const getBookFormFields = (book: NullableBook): FormField[] => [
+export const getBookFormFields = (book: INullableBook): FormField[] => [
   {
     name: 'title',
     label: 'Title',

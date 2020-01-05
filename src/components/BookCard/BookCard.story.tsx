@@ -6,14 +6,14 @@ import BookCard from '../BookCard/BookCard';
 import CenterView from '../CenterView';
 
 import { StoryDecorator } from '../../../storybook/types';
-import { Book } from '../../types/book.type';
+import { IBook } from '../../types/book.type';
 
-const book1: Book = {
+const book1: IBook = {
   id: 1,
   title: 'Demo book',
 };
 
-const book2: Book = {
+const book2: IBook = {
   id: 1,
   title:
     'Demo book with very very very long title here. Demo book with very very very long title here. Demo book with very very very long title here.',

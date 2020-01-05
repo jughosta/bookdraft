@@ -1,9 +1,9 @@
-export type BookData = {
+import { IEntity, IEntityData } from './entity';
+
+export interface IBookData extends IEntityData {
   title: string;
-};
+}
 
-export type Book = BookData & {
-  id: number;
-};
+export interface IBook extends IEntity, IBookData {}
 
-export type NullableBook = Book | null;
+export type INullableBook = IBook | null;

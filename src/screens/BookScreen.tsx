@@ -23,10 +23,10 @@ import {
   NavigationParamsForm,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
-import { NullableBook } from '../types/book.type';
+import { INullableBook } from '../types/book.type';
 
 interface IProps {
-  book: NullableBook;
+  book: INullableBook;
   loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBook>;
   dispatch: ThunkDispatch;

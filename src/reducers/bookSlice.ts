@@ -5,7 +5,7 @@ import { bookCreated, bookDeleted, bookEdited } from './booksSlice';
 import { destroyBook, getBook, insertBook, updateBook } from '../utils/storage';
 import { LoadingStatus } from '../utils/redux';
 
-import { BookData, NullableBook } from '../types/book.type';
+import { IBookData, INullableBook } from '../types/book.type';
 import { BookState, ThunkDispatch, ThunkResult } from '../types/redux.type';
 
 const initialState: BookState = {
@@ -20,7 +20,7 @@ const bookSlice = createSlice({
     loadingStatusChanged(state, action: PayloadAction<LoadingStatus>) {
       state.loadingStatus = action.payload;
     },
-    loaded(state, action: PayloadAction<NullableBook>) {
+    loaded(state, action: PayloadAction<INullableBook>) {
       state.book = action.payload || null;
     },
     reset() {
@@ -51,7 +51,7 @@ export const fetchBook = (bookId: number): ThunkResult<Promise<void>> => async (
 };
 
 export const createBook = (
-  bookData: BookData,
+  bookData: IBookData,
 ): ThunkResult<Promise<void>> => async dispatch => {
   try {
     const book = await insertBook(bookData);
@@ -64,7 +64,7 @@ export const createBook = (
 
 export const editBook = (
   bookId: number,
-  bookData: BookData,
+  bookData: IBookData,
 ): ThunkResult<Promise<void>> => async dispatch => {
   try {
     const book = await updateBook(bookId, bookData);

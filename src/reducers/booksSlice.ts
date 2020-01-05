@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getBooks } from '../utils/storage';
 import { LoadingStatus } from '../utils/redux';
 
-import { Book } from '../types/book.type';
+import { IBook } from '../types/book.type';
 import { BooksState, ThunkDispatch, ThunkResult } from '../types/redux.type';
 
 const initialState: BooksState = {
@@ -18,13 +18,13 @@ const booksSlice = createSlice({
     loadingStatusChanged(state, action: PayloadAction<LoadingStatus>) {
       state.loadingStatus = action.payload;
     },
-    loaded(state, action: PayloadAction<Book[]>) {
+    loaded(state, action: PayloadAction<IBook[]>) {
       state.list = action.payload;
     },
-    created(state, action: PayloadAction<Book>) {
+    created(state, action: PayloadAction<IBook>) {
       state.list.push(action.payload);
     },
-    edited(state, action: PayloadAction<Book>) {
+    edited(state, action: PayloadAction<IBook>) {
       const editedBook = action.payload;
       const prevBookIndex = state.list.findIndex(b => b.id === editedBook.id);
       if (prevBookIndex >= 0) {
@@ -68,10 +68,10 @@ export const fetchBooks = (): ThunkResult<Promise<void>> => async (
   }
 };
 
-export const bookCreated = (book: Book) => (dispatch: ThunkDispatch) =>
+export const bookCreated = (book: IBook) => (dispatch: ThunkDispatch) =>
   dispatch(created(book));
 
-export const bookEdited = (book: Book) => (dispatch: ThunkDispatch) =>
+export const bookEdited = (book: IBook) => (dispatch: ThunkDispatch) =>
   dispatch(edited(book));
 
 export const bookDeleted = (bookId: number) => (dispatch: ThunkDispatch) =>

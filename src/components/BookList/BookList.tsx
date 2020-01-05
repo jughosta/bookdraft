@@ -5,20 +5,20 @@ import BookCard from '../BookCard/BookCard';
 import Button from '../Button/Button';
 import Blank from '../Blank/Blank';
 
-import { Book } from '../../types/book.type';
+import { IBook } from '../../types/book.type';
 
 interface IProps {
-  books: Book[];
+  books: IBook[];
   onCreate: () => void;
-  onPress: (book: Book) => void;
+  onPress: (book: IBook) => void;
 }
 
 interface IListItem {
-  item: Book;
+  item: IBook;
 }
 
 class BookList extends React.Component<IProps> {
-  getKeyExtractor = (book: Book) => `book-${book.id}`;
+  getKeyExtractor = (book: IBook) => `book-${book.id}`;
 
   renderItem = ({ item }: IListItem) => {
     const { onPress } = this.props;

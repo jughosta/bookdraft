@@ -3,15 +3,15 @@ import { ThunkAction, ThunkDispatch as TDispatch } from 'redux-thunk';
 
 import { LoadingStatus } from '../utils/redux';
 
-import { Book, NullableBook } from './book.type';
+import { IBook, INullableBook } from './book.type';
 
 export type BookState = {
-  book: NullableBook;
+  book: INullableBook;
   loadingStatus: LoadingStatus;
 };
 
 export type BooksState = {
-  list: Book[];
+  list: IBook[];
   loadingStatus: LoadingStatus;
 };
 

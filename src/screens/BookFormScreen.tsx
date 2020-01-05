@@ -27,11 +27,11 @@ import { Palette } from '../utils/theme';
 
 import { NavigationParamsForm } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
-import { BookData, NullableBook } from 'src/types/book.type';
+import { IBookData, INullableBook } from 'src/types/book.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
-  book: NullableBook;
+  book: INullableBook;
   loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsForm>;
   dispatch: ThunkDispatch;
@@ -104,7 +104,7 @@ class BookFormScreen extends React.Component<IProps> {
   handleSubmit = async (values: FormValues) => {
     const { navigation, dispatch } = this.props;
     const bookId = navigation.getParam('id');
-    const bookData: BookData = {
+    const bookData: IBookData = {
       title: values.title,
     };
 
