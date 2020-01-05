@@ -77,7 +77,7 @@ class ChapterFormScreen extends React.Component<IProps> {
           style: 'cancel',
         },
         {
-          text: 'Yes, delete',
+          text: 'Delete',
           onPress: this.handleDelete,
           style: 'destructive',
         },
