@@ -1,4 +1,5 @@
 import { IBook } from './book.type';
+import { IChapter } from './chapter.type';
 
 export type NavigationParamsBooks = {};
 
@@ -14,6 +15,11 @@ export type NavigationParamsBookForm = {
 
 export type NavigationParamsChapter = {
   chapterId: number;
+};
+
+export type NavigationParamsChapterForm = {
+  chapter?: IChapter;
+  onConfirmDeletion?: () => void;
 };
 
 export type NavigationParamsChapterItem = {

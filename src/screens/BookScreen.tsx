@@ -11,6 +11,7 @@ import Touchable from '../components/Touchable';
 import IconPencil from '../icons/IconPencil';
 import Blank from '../components/Blank/Blank';
 import CenterView from '../components/CenterView';
+import ChaptersContainer from '../components/ChaptersContainer';
 
 import { fetchBook, resetBook } from '../reducers/bookSlice';
 
@@ -90,14 +91,19 @@ class BookScreen extends React.Component<IProps> {
   }
 
   renderContent() {
-    const { loadingStatus } = this.props;
+    const { book, loadingStatus, navigation } = this.props;
 
     if (loadingStatus === LoadingStatus.failed) {
       return <Blank message="Book not found" />;
     }
 
-    if (loadingStatus === LoadingStatus.loaded) {
-      return this.renderHeader();
+    if (loadingStatus === LoadingStatus.loaded && book) {
+      return (
+        <React.Fragment>
+          {this.renderHeader()}
+          <ChaptersContainer bookId={book.id} navigation={navigation} />
+        </React.Fragment>
+      );
     }
 
     return (

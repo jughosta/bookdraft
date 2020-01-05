@@ -3,5 +3,6 @@ export const Screens = {
   Book: 'BookScreen',
   BookForm: 'BookFormScreen',
   Chapter: 'ChapterScreen',
+  ChapterForm: 'ChapterFormScreen',
   ChapterItem: 'ChapterItemScreen',
 };
