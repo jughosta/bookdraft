@@ -9,37 +9,37 @@ type TableSpec = {
   foreignKeys?: Spec;
 };
 
-export const Tables: Spec = {
-  version: 'version',
-  book: 'book',
-  chapter: 'chapter',
-  chapterItem: 'chapter_item',
-};
+export enum DBTable {
+  version = 'version',
+  book = 'book',
+  chapter = 'chapter',
+  chapterItem = 'chapter_item',
+}
 
 const TableSpecs: { [k: string]: TableSpec } = {
-  [Tables.version]: {
+  [DBTable.version]: {
     columns: {
       id: 'INTEGER PRIMARY KEY',
       comment: 'TEXT',
     },
   },
-  [Tables.book]: {
+  [DBTable.book]: {
     columns: {
       id: 'INTEGER PRIMARY KEY',
       title: 'TEXT NOT NULL',
     },
   },
-  [Tables.chapter]: {
+  [DBTable.chapter]: {
     columns: {
       id: 'INTEGER PRIMARY KEY',
       book_id: 'INTEGER NOT NULL',
       title: 'TEXT NOT NULL',
     },
     foreignKeys: {
-      book_id: `${Tables.book} (id) ON DELETE CASCADE`,
+      book_id: `${DBTable.book} (id) ON DELETE CASCADE`,
     },
   },
-  [Tables.chapterItem]: {
+  [DBTable.chapterItem]: {
     columns: {
       id: 'INTEGER PRIMARY KEY',
       chapter_id: 'INTEGER NOT NULL',
@@ -47,15 +47,15 @@ const TableSpecs: { [k: string]: TableSpec } = {
       state: 'TEXT NOT NULL',
     },
     foreignKeys: {
-      chapter_id: `${Tables.chapter} (id) ON DELETE CASCADE`,
+      chapter_id: `${DBTable.chapter} (id) ON DELETE CASCADE`,
     },
   },
 };
 
 const tableIndexes: Spec = {
-  chapter_on_book_id: `${Tables.chapter} (book_id)`,
-  chapter_item_on_chapter_id: `${Tables.chapterItem} (chapter_id)`,
-  chapter_item_on_state: `${Tables.chapterItem} (state)`,
+  chapter_on_book_id: `${DBTable.chapter} (book_id)`,
+  chapter_item_on_chapter_id: `${DBTable.chapterItem} (chapter_id)`,
+  chapter_item_on_state: `${DBTable.chapterItem} (state)`,
 };
 
 const getCreateTableSQL = (
@@ -92,23 +92,23 @@ const getCreateTableSQL = (
 
 const createDatabaseTables = (tx: Transaction) => {
   tx.executeSql(
-    getCreateTableSQL(Tables.version, TableSpecs[Tables.version].columns),
+    getCreateTableSQL(DBTable.version, TableSpecs[DBTable.version].columns),
   );
   tx.executeSql(
-    getCreateTableSQL(Tables.book, TableSpecs[Tables.book].columns),
+    getCreateTableSQL(DBTable.book, TableSpecs[DBTable.book].columns),
   );
   tx.executeSql(
     getCreateTableSQL(
-      Tables.chapter,
-      TableSpecs[Tables.chapter].columns,
-      TableSpecs[Tables.chapter].foreignKeys,
+      DBTable.chapter,
+      TableSpecs[DBTable.chapter].columns,
+      TableSpecs[DBTable.chapter].foreignKeys,
     ),
   );
   tx.executeSql(
     getCreateTableSQL(
-      Tables.chapterItem,
-      TableSpecs[Tables.chapterItem].columns,
-      TableSpecs[Tables.chapterItem].foreignKeys,
+      DBTable.chapterItem,
+      TableSpecs[DBTable.chapterItem].columns,
+      TableSpecs[DBTable.chapterItem].foreignKeys,
     ),
   );
 
@@ -117,14 +117,14 @@ const createDatabaseTables = (tx: Transaction) => {
   );
 
   tx.executeSql(
-    `INSERT INTO ${Tables.version} (comment) VALUES ("Initial version");`,
+    `INSERT INTO ${DBTable.version} (comment) VALUES ("Initial version");`,
   );
-  tx.executeSql(`INSERT INTO ${Tables.book} (title) VALUES ("Demo book");`);
+  tx.executeSql(`INSERT INTO ${DBTable.book} (title) VALUES ("Demo book");`);
 };
 
 export const onDatabaseOpened = async (dbProvider: SQLiteDatabase) => {
   try {
-    await dbProvider.executeSql(`SELECT 1 FROM ${Tables.version} LIMIT 1`);
+    await dbProvider.executeSql(`SELECT 1 FROM ${DBTable.version} LIMIT 1`);
     console.log('Database has data and is ready');
   } catch (e) {
     console.log('Database is empty. Creating tables...');

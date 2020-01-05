@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getBooks } from '../utils/storage';
+import { getBooks } from '../utils/repository';
 import { LoadingStatus } from '../utils/redux';
 
 import { IBook } from '../types/book.type';

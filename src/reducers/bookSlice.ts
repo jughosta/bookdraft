@@ -2,7 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { bookCreated, bookDeleted, bookEdited } from './booksSlice';
 
-import { destroyBook, getBook, insertBook, updateBook } from '../utils/storage';
+import {
+  destroyBook,
+  getBook,
+  insertBook,
+  updateBook,
+} from '../utils/repository';
 import { LoadingStatus } from '../utils/redux';
 
 import { IBookData, INullableBook } from '../types/book.type';
