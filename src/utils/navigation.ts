@@ -5,4 +5,5 @@ export const Screens = {
   Chapter: 'ChapterScreen',
   ChapterForm: 'ChapterFormScreen',
   ChapterItem: 'ChapterItemScreen',
+  ChapterItemForm: 'ChapterItemFormScreen',
 };

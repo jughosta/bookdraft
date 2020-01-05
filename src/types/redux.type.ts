@@ -5,6 +5,7 @@ import { LoadingStatus } from '../utils/redux';
 
 import { IBook, INullableBook } from './book.type';
 import { IChapter, INullableChapter } from './chapter.type';
+import { IChapterItem, INullableChapterItem } from './chapterItem.type';
 
 export type BookState = {
   book: INullableBook;
@@ -26,11 +27,23 @@ export type ChaptersState = {
   loadingStatus: LoadingStatus;
 };
 
+export type ChapterItemState = {
+  chapterItem: INullableChapterItem;
+  loadingStatus: LoadingStatus;
+};
+
+export type ChapterItemsState = {
+  list: IChapterItem[];
+  loadingStatus: LoadingStatus;
+};
+
 export type RootState = {
   book: BookState;
   books: BooksState;
   chapter: ChapterState;
   chapters: ChaptersState;
+  chapterItem: ChapterItemState;
+  chapterItems: ChapterItemsState;
 };
 
 export type ThunkResult<R> = ThunkAction<R, RootState, null, Action<string>>;

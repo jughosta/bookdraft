@@ -4,6 +4,7 @@ import { DBTable } from './db/dbTables';
 import { IBook, IBookData } from '../types/book.type';
 import { IEntityData } from '../types/entity';
 import { IChapter, IChapterData } from '../types/chapter.type';
+import { IChapterItem, IChapterItemData } from '../types/chapterItem.type';
 
 export const getEntities = async <T>(
   table: DBTable,
@@ -98,3 +99,23 @@ export const updateChapter = (
 
 export const destroyChapter = (id: number): Promise<void> =>
   destroyEntity<IChapter>(DBTable.chapter, id);
+
+export const getChapterItems = (chapterId: number): Promise<IChapterItem[]> =>
+  getEntities<IChapterItem>(DBTable.chapterItem, 'chapterId = ?', [chapterId]);
+
+export const getChapterItem = (id: number): Promise<IChapterItem> =>
+  getEntity<IChapterItem>(DBTable.chapterItem, id);
+
+export const insertChapterItem = (
+  data: IChapterItemData,
+): Promise<IChapterItem> =>
+  insertEntity<IChapterItem>(DBTable.chapterItem, data);
+
+export const updateChapterItem = (
+  id: number,
+  data: IChapterItemData,
+): Promise<IChapterItem> =>
+  updateEntity<IChapterItem>(DBTable.chapterItem, id, data);
+
+export const destroyChapterItem = (id: number): Promise<void> =>
+  destroyEntity<IChapterItem>(DBTable.chapterItem, id);

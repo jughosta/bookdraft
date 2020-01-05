@@ -1,6 +1,10 @@
 import { FormField, FormFieldShape } from '../types/form.type';
 import { INullableBook } from '../types/book.type';
 import { INullableChapter } from '../types/chapter.type';
+import {
+  ChapterItemState,
+  INullableChapterItem,
+} from '../types/chapterItem.type';
 
 export enum FormSubmittingStatus {
   initial = 'initial',
@@ -26,5 +30,36 @@ export const getChapterFormFields = (
     label: 'Title',
     shape: FormFieldShape.text,
     defaultValue: chapter ? chapter.title : '',
+  },
+];
+
+export const getChapterItemFormFields = (
+  chapterItem?: INullableChapterItem,
+): FormField[] => [
+  {
+    name: 'state',
+    label: 'State',
+    shape: FormFieldShape.select,
+    defaultValue: chapterItem ? chapterItem.state : '',
+    options: [
+      {
+        label: 'In progress',
+        value: ChapterItemState.inProgress,
+      },
+      {
+        label: 'Idea / TODO',
+        value: ChapterItemState.idea,
+      },
+      {
+        label: 'Done',
+        value: ChapterItemState.done,
+      },
+    ],
+  },
+  {
+    name: 'content',
+    label: 'Content',
+    shape: FormFieldShape.textarea,
+    defaultValue: chapterItem ? chapterItem.content : '',
   },
 ];

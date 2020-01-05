@@ -21,7 +21,7 @@ const chapter2: IChapter = {
 };
 
 const chapter3: IChapter = {
-  id: 2,
+  id: 3,
   title: '2. Get to know your characters',
   bookId: 1,
 };

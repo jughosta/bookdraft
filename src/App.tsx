@@ -14,6 +14,7 @@ import { Palette } from './utils/theme';
 
 import rootReducer from './reducers';
 import BookFormScreen from './screens/BookFormScreen';
+import ChapterScreen from './screens/ChapterScreen';
 import ChapterFormScreen from './screens/ChapterFormScreen';
 
 const store = configureStore({
@@ -25,6 +26,7 @@ const AppNavigator = createStackNavigator(
     [Screens.Books]: BooksScreen,
     [Screens.Book]: BookScreen,
     [Screens.BookForm]: BookFormScreen,
+    [Screens.Chapter]: ChapterScreen,
     [Screens.ChapterForm]: ChapterFormScreen,
   },
   {

@@ -5,88 +5,92 @@ import { NavigationStackProp } from 'react-navigation-stack';
 
 import Blank from '../components/Blank/Blank';
 import CenterView from '../components/CenterView';
-import ChaptersContainer from '../containers/ChaptersContainer';
+import ChapterItemsContainer from '../containers/ChapterItemsContainer';
 import Button from '../components/Button/Button';
 
-import { fetchBook, resetBook } from '../reducers/bookSlice';
+import { fetchChapter, resetChapter } from '../reducers/chapterSlice';
 
 import { Palette } from '../utils/theme';
 import { LoadingStatus } from '../utils/redux';
 import { Screens } from '../utils/navigation';
 
 import {
-  NavigationParamsBook,
-  NavigationParamsBookForm,
+  NavigationParamsChapter,
+  NavigationParamsChapterForm,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
-import { INullableBook } from '../types/book.type';
+import { INullableChapter } from '../types/chapter.type';
 
 interface IProps {
-  bookId: number;
-  book: INullableBook;
+  chapterId: number;
+  chapter: INullableChapter;
   loadingStatus: LoadingStatus;
-  navigation: NavigationStackProp<NavigationParamsBook>;
+  navigation: NavigationStackProp<NavigationParamsChapter>;
   dispatch: ThunkDispatch;
 }
 
-class BookContainer extends React.Component<IProps> {
+class ChapterContainer extends React.Component<IProps> {
   componentDidMount(): void {
-    const { bookId, dispatch } = this.props;
+    const { chapterId, dispatch } = this.props;
 
-    dispatch(fetchBook(bookId));
+    dispatch(fetchChapter(chapterId));
   }
 
   componentWillUnmount(): void {
     const { dispatch } = this.props;
 
-    dispatch(resetBook());
+    dispatch(resetChapter());
   }
 
   handleEdit = () => {
-    const { book, navigation } = this.props;
+    const { chapter, navigation } = this.props;
 
-    if (!book) {
+    if (!chapter) {
       return;
     }
 
-    const params: NavigationParamsBookForm = {
-      book,
+    const params: NavigationParamsChapterForm = {
+      bookId: chapter.bookId,
+      chapter,
     };
 
-    navigation.navigate(Screens.BookForm, params);
+    navigation.navigate(Screens.ChapterForm, params);
   };
 
   renderHeader() {
-    const { book } = this.props;
+    const { chapter } = this.props;
 
-    if (!book) {
+    if (!chapter) {
       return null;
     }
 
     return (
       <View style={styles.header}>
-        <Text style={styles.title}>{book.title}</Text>
+        <Text style={styles.title}>{chapter.title}</Text>
         <Button title="Edit details" onPress={this.handleEdit} />
       </View>
     );
   }
 
   render() {
-    const { book, loadingStatus, navigation } = this.props;
+    const { chapter, loadingStatus, navigation } = this.props;
 
     if (loadingStatus === LoadingStatus.failed) {
       return (
         <CenterView>
-          <Blank message="Book not found" />
+          <Blank message="Chapter not found" />
         </CenterView>
       );
     }
 
-    if (loadingStatus === LoadingStatus.loaded && book) {
+    if (loadingStatus === LoadingStatus.loaded && chapter) {
       return (
         <React.Fragment>
           {this.renderHeader()}
-          <ChaptersContainer bookId={book.id} navigation={navigation} />
+          <ChapterItemsContainer
+            chapterId={chapter.id}
+            navigation={navigation}
+          />
         </React.Fragment>
       );
     }
@@ -114,9 +118,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ book }: RootState) => ({
-  book: book.book,
-  loadingStatus: book.loadingStatus,
+const mapStateToProps = ({ chapter }: RootState) => ({
+  chapter: chapter.chapter,
+  loadingStatus: chapter.loadingStatus,
 });
 
-export default connect(mapStateToProps)(BookContainer);
+export default connect(mapStateToProps)(ChapterContainer);
