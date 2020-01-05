@@ -43,16 +43,16 @@ export const getChapterItemFormFields = (
     defaultValue: chapterItem ? chapterItem.state : ChapterItemState.inProgress,
     options: [
       {
-        label: 'In progress',
+        label: 'Work in progress',
         value: ChapterItemState.inProgress,
-      },
-      {
-        label: 'Idea / TODO',
-        value: ChapterItemState.idea,
       },
       {
         label: 'Done',
         value: ChapterItemState.done,
+      },
+      {
+        label: 'Idea / TODO',
+        value: ChapterItemState.idea,
       },
     ],
   },

@@ -6,3 +6,5 @@ import '../../src/components/Button/Button.story';
 import '../../src/icons/Icons.story';
 import '../../src/components/ChapterCard/ChapterCard.story';
 import '../../src/components/ChapterList/ChapterList.story';
+import '../../src/components/ChapterItemCard/ChapterItemCard.story';
+import '../../src/components/ChapterItemList/ChapterItemList.story';
