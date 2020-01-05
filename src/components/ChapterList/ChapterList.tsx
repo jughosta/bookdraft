@@ -5,8 +5,9 @@ import ChapterCard from '../ChapterCard/ChapterCard';
 import Button from '../Button/Button';
 import Blank from '../Blank/Blank';
 
-import { IChapter } from '../../types/chapter.type';
 import { Palette } from '../../utils/theme';
+
+import { IChapter } from '../../types/chapter.type';
 
 interface IProps {
   chapters: IChapter[];
