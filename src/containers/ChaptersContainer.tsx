@@ -3,7 +3,6 @@ import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
 
-import Screen from '../components/Screen';
 import CenterView from '../components/CenterView';
 import ChapterList from '../components/ChapterList/ChapterList';
 
@@ -60,8 +59,9 @@ class ChaptersContainer extends React.Component<IProps> {
 
   render() {
     const { chapters, loadingStatus } = this.props;
+
     return (
-      <Screen>
+      <React.Fragment>
         {loadingStatus === LoadingStatus.initial ? (
           <CenterView>
             <ActivityIndicator />
@@ -73,7 +73,7 @@ class ChaptersContainer extends React.Component<IProps> {
             onPress={this.handleOpen}
           />
         )}
-      </Screen>
+      </React.Fragment>
     );
   }
 }

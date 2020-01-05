@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import Screen from '../components/Screen';
-import BooksContainer from '../components/BooksContainer';
+import BooksContainer from '../containers/BooksContainer';
 
 import { NavigationParamsBooks } from '../types/navigation.type';
 
