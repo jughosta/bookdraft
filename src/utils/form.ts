@@ -40,7 +40,7 @@ export const getChapterItemFormFields = (
     name: 'state',
     label: 'State',
     shape: FormFieldShape.select,
-    defaultValue: chapterItem ? chapterItem.state : '',
+    defaultValue: chapterItem ? chapterItem.state : ChapterItemState.inProgress,
     options: [
       {
         label: 'In progress',
