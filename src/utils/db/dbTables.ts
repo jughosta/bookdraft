@@ -32,29 +32,29 @@ const TableSpecs: { [k: string]: TableSpec } = {
   [DBTable.chapter]: {
     columns: {
       id: 'INTEGER PRIMARY KEY',
-      book_id: 'INTEGER NOT NULL',
+      bookId: 'INTEGER NOT NULL',
       title: 'TEXT NOT NULL',
     },
     foreignKeys: {
-      book_id: `${DBTable.book} (id) ON DELETE CASCADE`,
+      bookId: `${DBTable.book} (id) ON DELETE CASCADE`,
     },
   },
   [DBTable.chapterItem]: {
     columns: {
       id: 'INTEGER PRIMARY KEY',
-      chapter_id: 'INTEGER NOT NULL',
+      chapterId: 'INTEGER NOT NULL',
       content: 'TEXT NOT NULL',
       state: 'TEXT NOT NULL',
     },
     foreignKeys: {
-      chapter_id: `${DBTable.chapter} (id) ON DELETE CASCADE`,
+      chapterId: `${DBTable.chapter} (id) ON DELETE CASCADE`,
     },
   },
 };
 
 const tableIndexes: Spec = {
-  chapter_on_book_id: `${DBTable.chapter} (book_id)`,
-  chapter_item_on_chapter_id: `${DBTable.chapterItem} (chapter_id)`,
+  chapter_on_book_id: `${DBTable.chapter} (bookId)`,
+  chapter_item_on_chapter_id: `${DBTable.chapterItem} (chapterId)`,
   chapter_item_on_state: `${DBTable.chapterItem} (state)`,
 };
 

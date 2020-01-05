@@ -15,7 +15,7 @@ import { fetchBooks } from '../reducers/booksSlice';
 import {
   NavigationParamsBook,
   NavigationParamsBooks,
-  NavigationParamsForm,
+  NavigationParamsBookForm,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
 import { IBook } from '../types/book.type';
@@ -50,7 +50,7 @@ class BooksScreen extends React.Component<IProps> {
 
   handleCreateBook = () => {
     const { navigation } = this.props;
-    const params: NavigationParamsForm = {};
+    const params: NavigationParamsBookForm = {};
 
     navigation.navigate(Screens.BookForm, params);
   };

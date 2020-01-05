@@ -20,7 +20,7 @@ import { LoadingStatus } from '../utils/redux';
 
 import {
   NavigationParamsBook,
-  NavigationParamsForm,
+  NavigationParamsBookForm,
 } from '../types/navigation.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
 import { INullableBook } from '../types/book.type';
@@ -38,7 +38,7 @@ class BookScreen extends React.Component<IProps> {
   }: NavigationStackScreenProps<NavigationParamsBook>) => ({
     title: 'Book',
     headerRight: () => (
-      <Touchable onPress={navigation.getParam('onHeaderRightPressed')}>
+      <Touchable onPress={navigation.getParam('onEdit')}>
         <IconPencil fillColor={Palette.gray.v900} size={20} />
       </Touchable>
     ),
@@ -49,7 +49,7 @@ class BookScreen extends React.Component<IProps> {
     const bookId = navigation.getParam('bookId');
 
     navigation.setParams({
-      onHeaderRightPressed: this.handleEditBook,
+      onEdit: this.handleEditBook,
     });
 
     dispatch(fetchBook(bookId));
@@ -58,14 +58,18 @@ class BookScreen extends React.Component<IProps> {
   componentWillUnmount(): void {
     const { dispatch } = this.props;
 
-    dispatch(resetBook);
+    dispatch(resetBook());
   }
 
   handleEditBook = () => {
-    const { navigation } = this.props;
+    const { book, navigation } = this.props;
 
-    const params: NavigationParamsForm = {
-      id: navigation.getParam('bookId'),
+    if (!book) {
+      return;
+    }
+
+    const params: NavigationParamsBookForm = {
+      book,
     };
 
     navigation.navigate(Screens.BookForm, params);

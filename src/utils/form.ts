@@ -8,7 +8,7 @@ export enum FormSubmittingStatus {
   failed = 'failed',
 }
 
-export const getBookFormFields = (book: INullableBook): FormField[] => [
+export const getBookFormFields = (book?: INullableBook): FormField[] => [
   {
     name: 'title',
     label: 'Title',

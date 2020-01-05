@@ -1,13 +1,15 @@
-export type NavigationParamsBooks = {};
+import { IBook } from './book.type';
 
-export type NavigationParamsForm = {
-  id?: number;
-  onHeaderRightPressed?: () => void;
-};
+export type NavigationParamsBooks = {};
 
 export type NavigationParamsBook = {
   bookId: number;
-  onHeaderRightPressed?: () => void;
+  onEdit?: () => void;
+};
+
+export type NavigationParamsBookForm = {
+  book?: IBook;
+  onConfirmDeletion?: () => void;
 };
 
 export type NavigationParamsChapter = {

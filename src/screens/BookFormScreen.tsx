@@ -4,48 +4,37 @@ import {
   NavigationStackProp,
   NavigationStackScreenProps,
 } from 'react-navigation-stack';
-import { ActivityIndicator, Alert } from 'react-native';
+import { Alert } from 'react-native';
 
 import Screen from '../components/Screen';
 import Form from '../components/Form/Form';
-import CenterView from '../components/CenterView';
-import Blank from '../components/Blank/Blank';
 import Touchable from '../components/Touchable';
 import IconTrash from '../icons/IconTrash';
 
-import {
-  createBook,
-  deleteBook,
-  editBook,
-  fetchBook,
-  resetBook,
-} from '../reducers/bookSlice';
+import { createBook, deleteBook, editBook } from '../reducers/bookSlice';
 
 import { getBookFormFields } from '../utils/form';
-import { LoadingStatus } from '../utils/redux';
 import { Palette } from '../utils/theme';
 
-import { NavigationParamsForm } from '../types/navigation.type';
+import { NavigationParamsBookForm } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
-import { IBookData, INullableBook } from 'src/types/book.type';
-import { RootState, ThunkDispatch } from '../types/redux.type';
+import { IBookData } from 'src/types/book.type';
+import { ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
-  book: INullableBook;
-  loadingStatus: LoadingStatus;
-  navigation: NavigationStackProp<NavigationParamsForm>;
+  navigation: NavigationStackProp<NavigationParamsBookForm>;
   dispatch: ThunkDispatch;
 }
 
 class BookFormScreen extends React.Component<IProps> {
   static navigationOptions = ({
     navigation,
-  }: NavigationStackScreenProps<NavigationParamsForm>) => {
+  }: NavigationStackScreenProps<NavigationParamsBookForm>) => {
     return {
-      title: navigation.getParam('id') ? 'Book details' : 'New book',
+      title: navigation.getParam('book') ? 'Book details' : 'New book',
       headerRight: () =>
-        navigation.getParam('id') ? (
-          <Touchable onPress={navigation.getParam('onHeaderRightPressed')}>
+        navigation.getParam('book') ? (
+          <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
             <IconTrash fillColor={Palette.gray.v900} size={20} />
           </Touchable>
         ) : null,
@@ -53,29 +42,21 @@ class BookFormScreen extends React.Component<IProps> {
   };
 
   componentDidMount(): void {
-    const { navigation, dispatch } = this.props;
-    const bookId = navigation.getParam('id');
+    const { navigation } = this.props;
+    const book = navigation.getParam('book');
 
-    if (bookId) {
+    if (book) {
       navigation.setParams({
-        onHeaderRightPressed: this.handleConfirmDeletion,
+        onConfirmDeletion: this.handleConfirmDeletion,
       });
-
-      dispatch(fetchBook(bookId));
     }
-  }
-
-  componentWillUnmount(): void {
-    const { dispatch } = this.props;
-
-    dispatch(resetBook);
   }
 
   handleDelete = async () => {
     const { navigation, dispatch } = this.props;
 
     try {
-      await dispatch(deleteBook(navigation.getParam('id')));
+      await dispatch(deleteBook(navigation.getParam('book').id));
       navigation.pop(2);
     } catch (error) {
       console.warn(error);
@@ -103,7 +84,7 @@ class BookFormScreen extends React.Component<IProps> {
 
   handleSubmit = async (values: FormValues) => {
     const { navigation, dispatch } = this.props;
-    const bookId = navigation.getParam('id');
+    const bookId = navigation.getParam('book', {}).id;
     const bookData: IBookData = {
       title: values.title,
     };
@@ -121,28 +102,11 @@ class BookFormScreen extends React.Component<IProps> {
   };
 
   renderContent() {
-    const { book, loadingStatus, navigation } = this.props;
-
-    if (!navigation.getParam('id')) {
-      return (
-        <Form fields={getBookFormFields(null)} onSubmit={this.handleSubmit} />
-      );
-    }
-
-    if (loadingStatus === LoadingStatus.failed) {
-      return <Blank message="Book not found" />;
-    }
-
-    if (loadingStatus === LoadingStatus.loaded && book) {
-      return (
-        <Form fields={getBookFormFields(book)} onSubmit={this.handleSubmit} />
-      );
-    }
+    const { navigation } = this.props;
+    const book = navigation.getParam('book');
 
     return (
-      <CenterView>
-        <ActivityIndicator />
-      </CenterView>
+      <Form fields={getBookFormFields(book)} onSubmit={this.handleSubmit} />
     );
   }
 
@@ -151,9 +115,4 @@ class BookFormScreen extends React.Component<IProps> {
   }
 }
 
-const mapStateToProps = ({ book }: RootState) => ({
-  book: book.book,
-  loadingStatus: book.loadingStatus,
-});
-
-export default connect(mapStateToProps)(BookFormScreen);
+export default connect()(BookFormScreen);
