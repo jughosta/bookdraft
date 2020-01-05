@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   NavigationStackProp,
@@ -79,8 +79,8 @@ class BookScreen extends React.Component<IProps> {
     }
 
     return (
-      <View>
-        <Text>{book.title}</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>{book.title}</Text>
       </View>
     );
   }
@@ -107,6 +107,20 @@ class BookScreen extends React.Component<IProps> {
     return <Screen>{this.renderContent()}</Screen>;
   }
 }
+
+const styles = StyleSheet.create({
+  header: {
+    paddingVertical: 24,
+    paddingHorizontal: 48,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: Palette.gray.v900,
+  },
+});
 
 const mapStateToProps = ({ book }: RootState) => ({
   book: book.book,

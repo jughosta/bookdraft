@@ -1,4 +1,4 @@
-import { queryAll, insert, update } from './db/dbProvider';
+import { queryAll, insert, update, destroy } from './db/dbProvider';
 import { Tables } from './db/dbTables';
 
 import { Book, BookData } from '../types/book.type';
@@ -44,4 +44,12 @@ export const updateBook = async (
   }
 
   return await getBook(bookId);
+};
+
+export const destroyBook = async (bookId: number): Promise<void> => {
+  const rowsAffected = await destroy(Tables.book, bookId);
+
+  if (!rowsAffected || rowsAffected !== 1) {
+    throw Error('Error while deleting the book');
+  }
 };

@@ -31,10 +31,23 @@ const booksSlice = createSlice({
         state.list[prevBookIndex] = editedBook;
       }
     },
+    deleted(state, action: PayloadAction<number>) {
+      const bookId = action.payload;
+      const prevBookIndex = state.list.findIndex(b => b.id === bookId);
+      if (prevBookIndex >= 0) {
+        state.list.splice(prevBookIndex, 1);
+      }
+    },
   },
 });
 
-const { loadingStatusChanged, loaded, created, edited } = booksSlice.actions;
+const {
+  loadingStatusChanged,
+  loaded,
+  created,
+  edited,
+  deleted,
+} = booksSlice.actions;
 
 export const fetchBooks = (): ThunkResult<Promise<void>> => async (
   dispatch,
@@ -60,5 +73,8 @@ export const bookCreated = (book: Book) => (dispatch: ThunkDispatch) =>
 
 export const bookEdited = (book: Book) => (dispatch: ThunkDispatch) =>
   dispatch(edited(book));
+
+export const bookDeleted = (bookId: number) => (dispatch: ThunkDispatch) =>
+  dispatch(deleted(bookId));
 
 export default booksSlice.reducer;

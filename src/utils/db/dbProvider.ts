@@ -146,3 +146,22 @@ export const update = async (
     console.warn(error);
   }
 };
+
+export const destroy = async (
+  table: string,
+  id: number,
+): Promise<number | undefined> => {
+  try {
+    if (!dbProvider) {
+      throw Error('DB Provider is not ready!');
+    }
+
+    const [resultSets] = await dbProvider.executeSql(
+      `DELETE FROM ${table} WHERE id = ?`,
+      [id],
+    );
+    return resultSets.rowsAffected;
+  } catch (error) {
+    console.warn(error);
+  }
+};

@@ -4,15 +4,18 @@ import {
   NavigationStackProp,
   NavigationStackScreenProps,
 } from 'react-navigation-stack';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 
 import Screen from '../components/Screen';
 import Form from '../components/Form/Form';
 import CenterView from '../components/CenterView';
 import Blank from '../components/Blank/Blank';
+import Touchable from '../components/Touchable';
+import IconTrash from '../icons/IconTrash';
 
 import {
   createBook,
+  deleteBook,
   editBook,
   fetchBook,
   resetBook,
@@ -20,11 +23,9 @@ import {
 
 import { getBookFormFields } from '../utils/form';
 import { LoadingStatus } from '../utils/redux';
+import { Palette } from '../utils/theme';
 
-import {
-  NavigationParamsBooks,
-  NavigationParamsForm,
-} from '../types/navigation.type';
+import { NavigationParamsForm } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
 import { BookData, NullableBook } from 'src/types/book.type';
 import { RootState, ThunkDispatch } from '../types/redux.type';
@@ -32,7 +33,7 @@ import { RootState, ThunkDispatch } from '../types/redux.type';
 interface IProps {
   book: NullableBook;
   loadingStatus: LoadingStatus;
-  navigation: NavigationStackProp<NavigationParamsBooks>;
+  navigation: NavigationStackProp<NavigationParamsForm>;
   dispatch: ThunkDispatch;
 }
 
@@ -42,6 +43,12 @@ class BookFormScreen extends React.Component<IProps> {
   }: NavigationStackScreenProps<NavigationParamsForm>) => {
     return {
       title: navigation.getParam('id') ? 'Book details' : 'New book',
+      headerRight: () =>
+        navigation.getParam('id') ? (
+          <Touchable onPress={navigation.getParam('onHeaderRightPressed')}>
+            <IconTrash fillColor={Palette.gray.v900} size={20} />
+          </Touchable>
+        ) : null,
     };
   };
 
@@ -50,6 +57,10 @@ class BookFormScreen extends React.Component<IProps> {
     const bookId = navigation.getParam('id');
 
     if (bookId) {
+      navigation.setParams({
+        onHeaderRightPressed: this.handleConfirmDeletion,
+      });
+
       dispatch(fetchBook(bookId));
     }
   }
@@ -59,6 +70,36 @@ class BookFormScreen extends React.Component<IProps> {
 
     dispatch(resetBook);
   }
+
+  handleDelete = async () => {
+    const { navigation, dispatch } = this.props;
+
+    try {
+      await dispatch(deleteBook(navigation.getParam('id')));
+      navigation.pop(2);
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  handleConfirmDeletion = () => {
+    Alert.alert(
+      'Heads up!',
+      'Are you sure you want to delete this book and its content?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes, delete',
+          onPress: this.handleDelete,
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true },
+    );
+  };
 
   handleSubmit = async (values: FormValues) => {
     const { navigation, dispatch } = this.props;

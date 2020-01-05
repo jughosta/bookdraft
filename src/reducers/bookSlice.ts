@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { bookCreated, bookEdited } from './booksSlice';
+import { bookCreated, bookDeleted, bookEdited } from './booksSlice';
 
-import { getBook, insertBook, updateBook } from '../utils/storage';
+import { destroyBook, getBook, insertBook, updateBook } from '../utils/storage';
 import { LoadingStatus } from '../utils/redux';
 
 import { BookData, NullableBook } from '../types/book.type';
@@ -70,6 +70,19 @@ export const editBook = (
     const book = await updateBook(bookId, bookData);
     await dispatch(loaded(book));
     await dispatch(bookEdited(book));
+  } catch (error) {
+    console.warn(error);
+    throw error;
+  }
+};
+
+export const deleteBook = (
+  bookId: number,
+): ThunkResult<Promise<void>> => async dispatch => {
+  try {
+    await destroyBook(bookId);
+    await dispatch(reset());
+    await dispatch(bookDeleted(bookId));
   } catch (error) {
     console.warn(error);
     throw error;

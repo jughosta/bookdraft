@@ -72,9 +72,7 @@ class Form extends React.Component<IProps, IState> {
     return (
       <View style={styles.container}>
         {fields.map(field => (
-          <View
-            style={styles.field}
-            key={`${field.name}-${values[field.name]}`}>
+          <View style={styles.field} key={field.name}>
             <FormInput
               field={field}
               value={values[field.name]}
