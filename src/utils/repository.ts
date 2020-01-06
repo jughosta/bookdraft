@@ -1,4 +1,4 @@
-import { destroy, insert, queryAll, update } from './db/dbProvider';
+import { destroy, insert, queryAll, update } from '../reducers/storageSlice';
 import { DBTable } from './db/dbTables';
 
 import { IBook, IBookData } from '../types/book.type';

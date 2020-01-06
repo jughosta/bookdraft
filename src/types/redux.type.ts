@@ -1,7 +1,7 @@
 import { Action } from '@reduxjs/toolkit';
 import { ThunkAction, ThunkDispatch as TDispatch } from 'redux-thunk';
 
-import { LoadingStatus } from '../utils/redux';
+import { ConnectingStatus, LoadingStatus } from '../utils/redux';
 
 import { IBook, INullableBook } from './book.type';
 import { IChapter, INullableChapter } from './chapter.type';
@@ -37,6 +37,10 @@ export type ChapterItemsState = {
   loadingStatus: LoadingStatus;
 };
 
+export type StorageState = {
+  connectingStatus: ConnectingStatus;
+};
+
 export type RootState = {
   book: BookState;
   books: BooksState;
@@ -44,6 +48,7 @@ export type RootState = {
   chapters: ChaptersState;
   chapterItem: ChapterItemState;
   chapterItems: ChapterItemsState;
+  storage: StorageState;
 };
 
 export type ThunkResult<R> = ThunkAction<R, RootState, null, Action<string>>;

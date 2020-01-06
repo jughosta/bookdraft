@@ -1,57 +1,57 @@
 import React from 'react';
-import { AppState } from 'react-native';
+import { connect } from 'react-redux';
 
-import { closeDatabase, openDatabase } from '../utils/db/dbProvider';
+import { closeDatabase, openDatabase } from '../reducers/storageSlice';
 
-type AppStateValue = 'active' | 'background' | 'inactive';
+import { RootState, ThunkDispatch } from '../types/redux.type';
+import { ConnectingStatus } from '../utils/redux';
+import { ActivityIndicator } from 'react-native';
+import CenterView from './CenterView';
+
+type AppStateValue = 'active' | 'inactive';
 
 interface IProps {
+  connectingStatus: ConnectingStatus;
   children: JSX.Element;
+  dispatch: ThunkDispatch;
 }
 
-interface IState {
-  isReady: boolean;
-}
-
-class StorageProvider extends React.Component<IProps, IState> {
-  state = {
-    isReady: false,
-  };
-
+class StorageProvider extends React.Component<IProps> {
   componentDidMount(): void {
-    AppState.addEventListener('change', this.handleAppStateChanged);
     this.handleAppStateChanged('active');
   }
 
   componentWillUnmount(): void {
-    AppState.removeEventListener('change', this.handleAppStateChanged);
     this.handleAppStateChanged('inactive');
   }
 
-  handleAppStateChanged = async (nextAppState: AppStateValue) => {
-    if (nextAppState === 'active') {
-      await openDatabase();
+  handleAppStateChanged = (nextAppState: AppStateValue) => {
+    const { dispatch } = this.props;
 
-      if (!this.state.isReady) {
-        this.setState({
-          isReady: true,
-        });
-      }
-    } else if (nextAppState.match(/inactive|background/)) {
-      await closeDatabase();
+    if (nextAppState === 'active') {
+      dispatch(openDatabase());
+    } else {
+      dispatch(closeDatabase());
     }
   };
 
   render() {
-    const { children } = this.props;
-    const { isReady } = this.state;
+    const { connectingStatus, children } = this.props;
 
-    if (!isReady) {
-      return null;
+    if (connectingStatus === ConnectingStatus.initial) {
+      return (
+        <CenterView>
+          <ActivityIndicator />
+        </CenterView>
+      );
     }
 
     return children;
   }
 }
 
-export default StorageProvider;
+const mapStateToProps = ({ storage }: RootState) => ({
+  connectingStatus: storage.connectingStatus,
+});
+
+export default connect(mapStateToProps)(StorageProvider);
