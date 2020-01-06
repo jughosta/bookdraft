@@ -4,7 +4,6 @@ import {
   NavigationStackProp,
   NavigationStackScreenProps,
 } from 'react-navigation-stack';
-import { Alert } from 'react-native';
 
 import Screen from '../components/Screen';
 import Form from '../components/Form/Form';
@@ -19,6 +18,7 @@ import {
 
 import { getChapterItemFormFields } from '../utils/form';
 import { Palette } from '../utils/theme';
+import { confirmDeletion } from '../utils/alerts';
 
 import { NavigationParamsChapterItemForm } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
@@ -51,7 +51,7 @@ class ChapterItemFormScreen extends React.Component<IProps> {
 
     if (chapterItem) {
       navigation.setParams({
-        onConfirmDeletion: this.handleConfirmDeletion,
+        onConfirmDeletion: confirmDeletion('scene', this.handleDelete),
       });
     }
   }
@@ -65,25 +65,6 @@ class ChapterItemFormScreen extends React.Component<IProps> {
     } catch (error) {
       console.warn(error);
     }
-  };
-
-  handleConfirmDeletion = () => {
-    Alert.alert(
-      'Heads up!',
-      'Are you sure you want to delete this scene?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: this.handleDelete,
-          style: 'destructive',
-        },
-      ],
-      { cancelable: true },
-    );
   };
 
   handleSubmit = async (values: FormValues) => {

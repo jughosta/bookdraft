@@ -1,4 +1,4 @@
-import { SQLiteDatabase, Transaction } from 'react-native-sqlite-storage';
+import { Transaction } from 'react-native-sqlite-storage';
 
 type Spec = {
   [k: string]: string;
@@ -90,7 +90,7 @@ const getCreateTableSQL = (
   return query;
 };
 
-const createDatabaseTables = (tx: Transaction) => {
+export const createDatabaseTables = (tx: Transaction) => {
   tx.executeSql(
     getCreateTableSQL(DBTable.version, TableSpecs[DBTable.version].columns),
   );
@@ -120,15 +120,4 @@ const createDatabaseTables = (tx: Transaction) => {
     `INSERT INTO ${DBTable.version} (comment) VALUES ("Initial version");`,
   );
   tx.executeSql(`INSERT INTO ${DBTable.book} (title) VALUES ("Demo book");`);
-};
-
-export const onDatabaseOpened = async (dbProvider: SQLiteDatabase) => {
-  try {
-    await dbProvider.executeSql(`SELECT 1 FROM ${DBTable.version} LIMIT 1`);
-    console.log('Database has data and is ready');
-  } catch (e) {
-    console.log('Database is empty. Creating tables...');
-    await dbProvider.transaction(createDatabaseTables);
-    console.log('Database is ready');
-  }
 };
