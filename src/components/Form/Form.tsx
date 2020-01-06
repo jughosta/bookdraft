@@ -51,7 +51,6 @@ class Form extends React.Component<IProps, IState> {
     });
 
     try {
-      // TODO: add validation and show errors
       await onSubmit(values);
 
       this.setState({
@@ -83,7 +82,7 @@ class Form extends React.Component<IProps, IState> {
         <View style={styles.action}>
           <Button
             title={isSubmitting ? 'Submitting...' : 'Submit'}
-            disabled={isSubmitting}
+            disabled={isSubmitting || Object.keys(values).some(k => !values[k])}
             onPress={this.handleSubmit}
           />
         </View>
