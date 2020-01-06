@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 
 import BooksScreen from './screens/BooksScreen';
 import BookScreen from './screens/BookScreen';
-import StorageProvider from './components/StorageProvider';
+import StorageProvider from './containers/StorageProvider';
 
 import { Screens } from './utils/navigation';
 import { Palette } from './utils/theme';

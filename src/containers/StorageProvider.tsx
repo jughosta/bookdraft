@@ -6,7 +6,7 @@ import { closeDatabase, openDatabase } from '../reducers/storageSlice';
 import { RootState, ThunkDispatch } from '../types/redux.type';
 import { ConnectingStatus } from '../utils/redux';
 import { ActivityIndicator } from 'react-native';
-import CenterView from './CenterView';
+import CenterView from '../components/CenterView';
 
 type AppStateValue = 'active' | 'inactive';
 
