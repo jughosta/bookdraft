@@ -17,12 +17,12 @@ yarn <ios | android>
 
 ## Storybook
 
-Switch imports in `index.js` and restart it.
+Switch imports in `index.js` and restart everything.
 
 ## Description
 
 The idea of this app is to allow users to write book chapters in chunks - short scenes which can be edited separately. 
-Each scene can be marked as 'Work in progress', 'Done' or 'Idea / TODO' to track the progress.
+Each scene can be marked as 'Work in progress', 'Done' or 'Idea / TODO' to track the progress (color coding).
 
 ## Current functionality
 
@@ -41,7 +41,7 @@ Each scene can be marked as 'Work in progress', 'Done' or 'Idea / TODO' to track
 - [ ] Allow reordering of chapters and scenes
 - [ ] Visualize the progress of writing a book/chapter based on the existing scenes statuses
 - [ ] Test the connection to SQLite DB properly and might be switch to another storage type (e.g. use an API) 
-- [ ] Backups if the app stays offline only
+- [ ] Backups if the app stays offline-only
 - [ ] Write tests for reducers
 
 ## Screenshots
