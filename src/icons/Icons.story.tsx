@@ -18,6 +18,7 @@ storiesOf('Icon', module)
     <CenterView>{getStory()}</CenterView>
   ))
   .add('all', () => (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       <IconBook fillColor={FILL_COLOR} size={SIZE} />
       <IconTrash fillColor={FILL_COLOR} size={SIZE} />
