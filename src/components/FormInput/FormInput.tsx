@@ -11,86 +11,60 @@ interface IProps {
   onChange: (value: string, field: FormField) => void;
 }
 
-class FormInput extends React.Component<IProps> {
-  handleChange = (value: string) => {
-    const { field, onChange } = this.props;
+const FormInput = ({ value, field, onChange }: IProps) => {
+  const handleChange = (v: string) => onChange(v, field);
 
-    onChange(value, field);
-  };
+  let fieldComponent = null;
 
-  renderFieldText() {
-    const { value } = this.props;
-
-    return (
-      <TextInput
-        style={styles.textInput}
-        value={value}
-        underlineColorAndroid="transparent"
-        onChangeText={this.handleChange}
-      />
-    );
+  switch (field.shape) {
+    case FormFieldShape.text:
+      fieldComponent = (
+        <TextInput
+          style={styles.textInput}
+          value={value}
+          underlineColorAndroid="transparent"
+          onChangeText={handleChange}
+        />
+      );
+      break;
+    case FormFieldShape.textarea:
+      fieldComponent = (
+        <TextInput
+          multiline
+          style={styles.textareaInput}
+          value={value}
+          underlineColorAndroid="transparent"
+          onChangeText={handleChange}
+        />
+      );
+      break;
+    case FormFieldShape.select:
+      fieldComponent = (
+        <Picker
+          selectedValue={value}
+          style={styles.pickerInput}
+          onValueChange={handleChange}>
+          {(field.options || []).map(option => (
+            <Picker.Item
+              label={option.label}
+              value={option.value}
+              key={option.value}
+            />
+          ))}
+        </Picker>
+      );
+      break;
+    default:
+      break;
   }
 
-  renderFieldTextarea() {
-    const { value } = this.props;
-
-    return (
-      <TextInput
-        multiline
-        style={styles.textareaInput}
-        value={value}
-        underlineColorAndroid="transparent"
-        onChangeText={this.handleChange}
-      />
-    );
-  }
-
-  renderFieldSelect() {
-    const { value, field } = this.props;
-
-    return (
-      <Picker
-        selectedValue={value}
-        style={styles.pickerInput}
-        onValueChange={this.handleChange}>
-        {(field.options || []).map(option => (
-          <Picker.Item
-            label={option.label}
-            value={option.value}
-            key={option.value}
-          />
-        ))}
-      </Picker>
-    );
-  }
-
-  render() {
-    const { field } = this.props;
-
-    let fieldComponent = null;
-
-    switch (field.shape) {
-      case FormFieldShape.text:
-        fieldComponent = this.renderFieldText();
-        break;
-      case FormFieldShape.textarea:
-        fieldComponent = this.renderFieldTextarea();
-        break;
-      case FormFieldShape.select:
-        fieldComponent = this.renderFieldSelect();
-        break;
-      default:
-        break;
-    }
-
-    return (
-      <View style={styles.container}>
-        <Text style={styles.label}>{field.label}</Text>
-        <View style={styles.content}>{fieldComponent}</View>
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>{field.label}</Text>
+      <View style={styles.content}>{fieldComponent}</View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
