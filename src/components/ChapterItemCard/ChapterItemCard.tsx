@@ -12,25 +12,13 @@ interface IProps {
   onPress: (chapterItem: IChapterItem) => void;
 }
 
-class ChapterItemCard extends React.Component<IProps> {
-  handlePress = () => {
-    const { chapterItem, onPress } = this.props;
-
-    onPress(chapterItem);
-  };
-
-  render() {
-    const { chapterItem } = this.props;
-
-    return (
-      <Touchable onPress={this.handlePress}>
-        <View style={[styles.container, styles[chapterItem.state]]}>
-          <Text style={styles.content}>{chapterItem.content}</Text>
-        </View>
-      </Touchable>
-    );
-  }
-}
+const ChapterItemCard = React.memo<IProps>(({ chapterItem, onPress }) => (
+  <Touchable onPress={() => onPress(chapterItem)}>
+    <View style={[styles.container, styles[chapterItem.state]]}>
+      <Text style={styles.content}>{chapterItem.content}</Text>
+    </View>
+  </Touchable>
+));
 
 const styles = StyleSheet.create({
   container: {

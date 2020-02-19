@@ -19,47 +19,27 @@ interface IListItem {
   item: IChapterItem;
 }
 
-class ChapterItemList extends React.Component<IProps> {
-  getKeyExtractor = (chapter: IChapterItem) => `chapter-${chapter.id}`;
-
-  renderItem = ({ item }: IListItem) => {
-    const { onPress } = this.props;
-
-    return <ChapterItemCard chapterItem={item} onPress={onPress} />;
-  };
-
-  renderSeparator = () => {
-    return <View style={styles.separator} />;
-  };
-
-  renderFooter = () => {
-    const { onCreate } = this.props;
-
-    return <Button icon="+" title="Create scene" onPress={onCreate} />;
-  };
-
-  renderEmpty = () => (
-    <View style={styles.empty}>
-      <Blank message="No scenes here yet. Create a first one. Keep it short, you can always add more scenes later." />
-    </View>
-  );
-
-  render() {
-    const { chapterItems } = this.props;
-
-    return (
-      <FlatList
-        data={chapterItems}
-        keyExtractor={this.getKeyExtractor}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.renderSeparator}
-        ListFooterComponent={this.renderFooter}
-        ListFooterComponentStyle={styles.footer}
-        ListEmptyComponent={this.renderEmpty}
-      />
-    );
-  }
-}
+const ChapterItemList = React.memo<IProps>(
+  ({ chapterItems, onCreate, onPress }) => (
+    <FlatList
+      data={chapterItems}
+      keyExtractor={(chapter: IChapterItem) => `chapter-${chapter.id}`}
+      renderItem={({ item }: IListItem) => (
+        <ChapterItemCard chapterItem={item} onPress={onPress} />
+      )}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ListFooterComponent={() => (
+        <Button icon="+" title="Create scene" onPress={onCreate} />
+      )}
+      ListFooterComponentStyle={styles.footer}
+      ListEmptyComponent={() => (
+        <View style={styles.empty}>
+          <Blank message="No scenes here yet. Create a first one. Keep it short, you can always add more scenes later." />
+        </View>
+      )}
+    />
+  ),
+);
 
 const styles = StyleSheet.create({
   separator: {
