@@ -17,46 +17,24 @@ interface IListItem {
   item: IBook;
 }
 
-class BookList extends React.Component<IProps> {
-  getKeyExtractor = (book: IBook) => `book-${book.id}`;
-
-  renderItem = ({ item }: IListItem) => {
-    const { onPress } = this.props;
-
-    return <BookCard book={item} onPress={onPress} />;
-  };
-
-  renderSeparator = () => {
-    return <View style={styles.separator} />;
-  };
-
-  renderFooter = () => {
-    const { onCreate } = this.props;
-
-    return <Button icon="+" title="Create book" onPress={onCreate} />;
-  };
-
-  renderEmpty = () => (
-    <Blank message="Hi! Welcome to BookDraft app - a place to write a book on the go! Start by creating your first book via the button below." />
-  );
-
-  render() {
-    const { books } = this.props;
-
-    return (
-      <FlatList
-        style={styles.container}
-        data={books}
-        keyExtractor={this.getKeyExtractor}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.renderSeparator}
-        ListFooterComponent={this.renderFooter}
-        ListFooterComponentStyle={styles.footer}
-        ListEmptyComponent={this.renderEmpty}
-      />
-    );
-  }
-}
+const BookList = React.memo<IProps>(({ books, onCreate, onPress }) => (
+  <FlatList
+    style={styles.container}
+    data={books}
+    keyExtractor={(book: IBook) => `book-${book.id}`}
+    renderItem={({ item }: IListItem) => (
+      <BookCard book={item} onPress={onPress} />
+    )}
+    ItemSeparatorComponent={() => <View style={styles.separator} />}
+    ListFooterComponent={() => (
+      <Button icon="+" title="Create book" onPress={onCreate} />
+    )}
+    ListFooterComponentStyle={styles.footer}
+    ListEmptyComponent={() => (
+      <Blank message="Hi! Welcome to BookDraft app - a place to write a book on the go! Start by creating your first book via the button below." />
+    )}
+  />
+));
 
 const styles = StyleSheet.create({
   container: {
