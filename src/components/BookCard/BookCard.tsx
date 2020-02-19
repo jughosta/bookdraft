@@ -13,7 +13,7 @@ interface IProps {
   onPress: (book: IBook) => void;
 }
 
-const BookCard = React.memo<IProps>(({ book, onPress }) => (
+const BookCard = ({ book, onPress }: IProps) => (
   <Touchable onPress={() => onPress(book)}>
     <View style={styles.container}>
       <View style={styles.content}>
@@ -28,7 +28,7 @@ const BookCard = React.memo<IProps>(({ book, onPress }) => (
       </View>
     </View>
   </Touchable>
-));
+);
 
 const styles = StyleSheet.create({
   container: {

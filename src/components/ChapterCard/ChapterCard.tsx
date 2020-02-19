@@ -12,13 +12,13 @@ interface IProps {
   onPress: (chapter: IChapter) => void;
 }
 
-const ChapterCard = React.memo<IProps>(({ chapter, onPress }) => (
+const ChapterCard = ({ chapter, onPress }: IProps) => (
   <Touchable onPress={() => onPress(chapter)}>
     <View style={styles.container}>
       <Text style={styles.title}>{chapter.title}</Text>
     </View>
   </Touchable>
-));
+);
 
 const styles = StyleSheet.create({
   container: {
