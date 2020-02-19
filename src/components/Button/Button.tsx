@@ -12,14 +12,14 @@ interface IProps {
   onPress: () => void;
 }
 
-const Button = ({ icon, disabled, title, onPress }: IProps) => (
+const Button = React.memo<IProps>(({ icon, disabled, title, onPress }) => (
   <Touchable onPress={onPress} disabled={disabled}>
     <View style={disabled ? styles.buttonDisabled : styles.button}>
       {Boolean(icon) && <Text style={styles.icon}>{icon}</Text>}
       <Text style={styles.title}>{title}</Text>
     </View>
   </Touchable>
-);
+));
 
 const textStyle: TextStyle = {
   fontWeight: '600',
