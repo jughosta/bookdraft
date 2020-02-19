@@ -13,34 +13,22 @@ interface IProps {
   onPress: (book: IBook) => void;
 }
 
-class BookCard extends React.Component<IProps> {
-  handlePress = () => {
-    const { book, onPress } = this.props;
-
-    onPress(book);
-  };
-
-  render() {
-    const { book } = this.props;
-
-    return (
-      <Touchable onPress={this.handlePress}>
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <View style={styles.icon}>
-              <IconBook fillColor={Palette.gray.v500} size={36} />
-            </View>
-            <View style={styles.info}>
-              <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>
-                {book.title}
-              </Text>
-            </View>
-          </View>
+const BookCard = React.memo<IProps>(({ book, onPress }) => (
+  <Touchable onPress={() => onPress(book)}>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.icon}>
+          <IconBook fillColor={Palette.gray.v500} size={36} />
         </View>
-      </Touchable>
-    );
-  }
-}
+        <View style={styles.info}>
+          <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>
+            {book.title}
+          </Text>
+        </View>
+      </View>
+    </View>
+  </Touchable>
+));
 
 const styles = StyleSheet.create({
   container: {
