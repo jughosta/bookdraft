@@ -19,47 +19,25 @@ interface IListItem {
   item: IChapter;
 }
 
-class ChapterList extends React.Component<IProps> {
-  getKeyExtractor = (chapter: IChapter) => `chapter-${chapter.id}`;
-
-  renderItem = ({ item }: IListItem) => {
-    const { onPress } = this.props;
-
-    return <ChapterCard chapter={item} onPress={onPress} />;
-  };
-
-  renderSeparator = () => {
-    return <View style={styles.separator} />;
-  };
-
-  renderFooter = () => {
-    const { onCreate } = this.props;
-
-    return <Button icon="+" title="Create chapter" onPress={onCreate} />;
-  };
-
-  renderEmpty = () => (
-    <View style={styles.empty}>
-      <Blank message="No chapters here yet." />
-    </View>
-  );
-
-  render() {
-    const { chapters } = this.props;
-
-    return (
-      <FlatList
-        data={chapters}
-        keyExtractor={this.getKeyExtractor}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.renderSeparator}
-        ListFooterComponent={this.renderFooter}
-        ListFooterComponentStyle={styles.footer}
-        ListEmptyComponent={this.renderEmpty}
-      />
-    );
-  }
-}
+const ChapterList = React.memo<IProps>(({ chapters, onCreate, onPress }) => (
+  <FlatList
+    data={chapters}
+    keyExtractor={(chapter: IChapter) => `chapter-${chapter.id}`}
+    renderItem={({ item }: IListItem) => (
+      <ChapterCard chapter={item} onPress={onPress} />
+    )}
+    ItemSeparatorComponent={() => <View style={styles.separator} />}
+    ListFooterComponent={() => (
+      <Button icon="+" title="Create chapter" onPress={onCreate} />
+    )}
+    ListFooterComponentStyle={styles.footer}
+    ListEmptyComponent={() => (
+      <View style={styles.empty}>
+        <Blank message="No chapters here yet." />
+      </View>
+    )}
+  />
+));
 
 const styles = StyleSheet.create({
   separator: {
