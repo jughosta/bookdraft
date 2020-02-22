@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
@@ -26,38 +26,35 @@ interface IProps {
   dispatch: ThunkDispatch;
 }
 
-class BooksContainer extends React.Component<IProps> {
-  componentDidMount(): void {
-    const { dispatch } = this.props;
-
-    dispatch(fetchBooks());
-  }
-
-  componentWillUnmount(): void {
-    const { dispatch } = this.props;
-
-    dispatch(resetBooks());
-  }
-
-  handleOpen = (book: IBook) => {
-    const { navigation } = this.props;
-
-    const params: NavigationParamsBook = {
-      bookId: book.id,
-    };
-
-    navigation.navigate(Screens.Book, params);
+function navigateToViewScreen(
+  navigation: NavigationStackProp<NavigationParamsBooks>,
+  book: IBook,
+) {
+  const params: NavigationParamsBook = {
+    bookId: book.id,
   };
 
-  handleCreate = () => {
-    const { navigation } = this.props;
-    const params: NavigationParamsBookForm = {};
+  navigation.navigate(Screens.Book, params);
+}
 
-    navigation.navigate(Screens.BookForm, params);
-  };
+function navigateToCreateScreen(
+  navigation: NavigationStackProp<NavigationParamsBooks>,
+) {
+  const params: NavigationParamsBookForm = {};
 
-  render() {
-    const { books, loadingStatus } = this.props;
+  navigation.navigate(Screens.BookForm, params);
+}
+
+const BooksContainer = React.memo<IProps>(
+  ({ books, loadingStatus, navigation, dispatch }) => {
+    useEffect(() => {
+      dispatch(fetchBooks());
+
+      return () => {
+        dispatch(resetBooks());
+      };
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     return (
       <React.Fragment>
         {loadingStatus === LoadingStatus.initial ? (
@@ -67,14 +64,14 @@ class BooksContainer extends React.Component<IProps> {
         ) : (
           <BookList
             books={books}
-            onCreate={this.handleCreate}
-            onPress={this.handleOpen}
+            onCreate={() => navigateToCreateScreen(navigation)}
+            onPress={book => navigateToViewScreen(navigation, book)}
           />
         )}
       </React.Fragment>
     );
-  }
-}
+  },
+);
 
 const mapStateToProps = ({ books }: RootState) => ({
   books: books.list,
