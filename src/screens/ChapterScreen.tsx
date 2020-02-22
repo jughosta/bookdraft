@@ -10,22 +10,17 @@ interface IProps {
   navigation: NavigationStackProp<NavigationParamsChapter>;
 }
 
-class ChapterScreen extends React.Component<IProps> {
-  static navigationOptions = {
-    title: 'Chapter',
-  };
+const ChapterScreen = ({ navigation }: IProps) => (
+  <Screen>
+    <ChapterContainer
+      chapterId={navigation.getParam('chapterId')}
+      navigation={navigation}
+    />
+  </Screen>
+);
 
-  render() {
-    const { navigation } = this.props;
-    return (
-      <Screen>
-        <ChapterContainer
-          chapterId={navigation.getParam('chapterId')}
-          navigation={navigation}
-        />
-      </Screen>
-    );
-  }
-}
+ChapterScreen.navigationOptions = {
+  title: 'Chapter',
+};
 
 export default ChapterScreen;
