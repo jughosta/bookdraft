@@ -13,6 +13,8 @@ describe('<ChapterHeader />', () => {
         onEdit={() => {}}
       />,
     );
-    expect(instance.root.findByType(Text).props.children).toBe('Test chapter');
+    expect(instance.root.findAllByType(Text)[0].props.children).toBe(
+      'Test chapter',
+    );
   });
 });

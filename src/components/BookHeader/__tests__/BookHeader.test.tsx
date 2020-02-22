@@ -10,6 +10,8 @@ describe('<BookHeader />', () => {
     const instance = renderer.create(
       <BookHeader book={{ id: 1, title: 'Test book' }} onEdit={() => {}} />,
     );
-    expect(instance.root.findByType(Text).props.children).toBe('Test book');
+    expect(instance.root.findAllByType(Text)[0].props.children).toBe(
+      'Test book',
+    );
   });
 });
