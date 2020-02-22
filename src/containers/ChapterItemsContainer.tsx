@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
@@ -29,41 +29,38 @@ interface IProps {
   dispatch: ThunkDispatch;
 }
 
-class ChaptersItemsContainer extends React.Component<IProps> {
-  componentDidMount(): void {
-    const { chapterId, dispatch } = this.props;
-
-    dispatch(fetchChapterItems(chapterId));
-  }
-
-  componentWillUnmount(): void {
-    const { dispatch } = this.props;
-
-    dispatch(resetChapterItems());
-  }
-
-  handleEdit = (chapterItem: IChapterItem) => {
-    const { navigation } = this.props;
-
-    const params: NavigationParamsChapterItemForm = {
-      chapterId: chapterItem.chapterId,
-      chapterItem,
-    };
-
-    navigation.navigate(Screens.ChapterItemForm, params);
+function navigateToCreateScreen(
+  navigation: NavigationStackProp<NavigationParamsChapter>,
+  chapterId: number,
+) {
+  const params: NavigationParamsChapterItemForm = {
+    chapterId,
   };
 
-  handleCreate = () => {
-    const { chapterId, navigation } = this.props;
-    const params: NavigationParamsChapterItemForm = {
-      chapterId,
-    };
+  navigation.navigate(Screens.ChapterItemForm, params);
+}
 
-    navigation.navigate(Screens.ChapterItemForm, params);
+function navigateToEditScreen(
+  navigation: NavigationStackProp<NavigationParamsChapter>,
+  chapterItem: IChapterItem,
+) {
+  const params: NavigationParamsChapterItemForm = {
+    chapterId: chapterItem.chapterId,
+    chapterItem,
   };
 
-  render() {
-    const { chapterItems, loadingStatus } = this.props;
+  navigation.navigate(Screens.ChapterItemForm, params);
+}
+
+const ChaptersItemsContainer = React.memo<IProps>(
+  ({ chapterId, chapterItems, loadingStatus, navigation, dispatch }) => {
+    useEffect(() => {
+      dispatch(fetchChapterItems(chapterId));
+
+      return () => {
+        dispatch(resetChapterItems());
+      };
+    }, [chapterId, dispatch]);
 
     return (
       <React.Fragment>
@@ -74,14 +71,16 @@ class ChaptersItemsContainer extends React.Component<IProps> {
         ) : (
           <ChapterItemList
             chapterItems={chapterItems}
-            onCreate={this.handleCreate}
-            onPress={this.handleEdit}
+            onCreate={() => navigateToCreateScreen(navigation, chapterId)}
+            onPress={chapterItem =>
+              navigateToEditScreen(navigation, chapterItem)
+            }
           />
         )}
       </React.Fragment>
     );
-  }
-}
+  },
+);
 
 const mapStateToProps = ({ chapterItems }: RootState) => ({
   chapterItems: chapterItems.list,

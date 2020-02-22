@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from 'react-redux';
@@ -27,40 +27,37 @@ interface IProps {
   dispatch: ThunkDispatch;
 }
 
-class ChaptersContainer extends React.Component<IProps> {
-  componentDidMount(): void {
-    const { bookId, dispatch } = this.props;
-
-    dispatch(fetchChapters(bookId));
-  }
-
-  componentWillUnmount(): void {
-    const { dispatch } = this.props;
-
-    dispatch(resetChapters());
-  }
-
-  handleOpen = (chapter: IChapter) => {
-    const { navigation } = this.props;
-
-    const params: NavigationParamsChapter = {
-      chapterId: chapter.id,
-    };
-
-    navigation.navigate(Screens.Chapter, params);
+function navigateToViewScreen(
+  navigation: NavigationStackProp<NavigationParamsBook>,
+  chapter: IChapter,
+) {
+  const params: NavigationParamsChapter = {
+    chapterId: chapter.id,
   };
 
-  handleCreate = () => {
-    const { bookId, navigation } = this.props;
-    const params: NavigationParamsChapterForm = {
-      bookId,
-    };
+  navigation.navigate(Screens.Chapter, params);
+}
 
-    navigation.navigate(Screens.ChapterForm, params);
+function navigateToCreateScreen(
+  navigation: NavigationStackProp<NavigationParamsBook>,
+  bookId: number,
+) {
+  const params: NavigationParamsChapterForm = {
+    bookId,
   };
 
-  render() {
-    const { chapters, loadingStatus } = this.props;
+  navigation.navigate(Screens.ChapterForm, params);
+}
+
+const ChaptersContainer = React.memo<IProps>(
+  ({ bookId, chapters, loadingStatus, navigation, dispatch }) => {
+    useEffect(() => {
+      dispatch(fetchChapters(bookId));
+
+      return () => {
+        dispatch(resetChapters());
+      };
+    }, [bookId, dispatch]);
 
     return (
       <React.Fragment>
@@ -71,14 +68,14 @@ class ChaptersContainer extends React.Component<IProps> {
         ) : (
           <ChapterList
             chapters={chapters}
-            onCreate={this.handleCreate}
-            onPress={this.handleOpen}
+            onCreate={() => navigateToCreateScreen(navigation, bookId)}
+            onPress={chapter => navigateToViewScreen(navigation, chapter)}
           />
         )}
       </React.Fragment>
     );
-  }
-}
+  },
+);
 
 const mapStateToProps = ({ chapters }: RootState) => ({
   chapters: chapters.list,

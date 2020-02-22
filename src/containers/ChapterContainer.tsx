@@ -13,7 +13,6 @@ import { LoadingStatus } from '../utils/redux';
 import { Screens } from '../utils/navigation';
 
 import {
-  NavigationParamsBooks,
   NavigationParamsChapter,
   NavigationParamsChapterForm,
 } from '../types/navigation.type';
@@ -30,7 +29,7 @@ interface IProps {
 }
 
 function navigateToEditScreen(
-  navigation: NavigationStackProp<NavigationParamsBooks>,
+  navigation: NavigationStackProp<NavigationParamsChapter>,
   chapter: IChapter,
 ) {
   if (!chapter) {
