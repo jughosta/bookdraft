@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
+
+import CenterView from '../components/CenterView';
 
 import { closeDatabase, openDatabase } from '../reducers/storageSlice';
 
-import { RootState, ThunkDispatch } from '../types/redux.type';
 import { ConnectingStatus } from '../utils/redux';
-import { ActivityIndicator } from 'react-native';
-import CenterView from '../components/CenterView';
 
-type AppStateValue = 'active' | 'inactive';
+import { RootState, ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
   connectingStatus: ConnectingStatus;
@@ -16,39 +16,25 @@ interface IProps {
   dispatch: ThunkDispatch;
 }
 
-class StorageProvider extends React.Component<IProps> {
-  componentDidMount(): void {
-    this.handleAppStateChanged('active');
-  }
+const StorageProvider = ({ connectingStatus, children, dispatch }: IProps) => {
+  useEffect(() => {
+    dispatch(openDatabase());
 
-  componentWillUnmount(): void {
-    this.handleAppStateChanged('inactive');
-  }
-
-  handleAppStateChanged = (nextAppState: AppStateValue) => {
-    const { dispatch } = this.props;
-
-    if (nextAppState === 'active') {
-      dispatch(openDatabase());
-    } else {
+    return () => {
       dispatch(closeDatabase());
-    }
-  };
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  render() {
-    const { connectingStatus, children } = this.props;
-
-    if (connectingStatus === ConnectingStatus.initial) {
-      return (
-        <CenterView>
-          <ActivityIndicator />
-        </CenterView>
-      );
-    }
-
-    return children;
+  if (connectingStatus === ConnectingStatus.initial) {
+    return (
+      <CenterView>
+        <ActivityIndicator />
+      </CenterView>
+    );
   }
-}
+
+  return children;
+};
 
 const mapStateToProps = ({ storage }: RootState) => ({
   connectingStatus: storage.connectingStatus,
