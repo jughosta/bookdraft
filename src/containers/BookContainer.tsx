@@ -29,8 +29,8 @@ interface IProps {
 }
 
 function navigateToEditScreen(
-  book: INullableBook,
   navigation: NavigationStackProp<NavigationParamsBook>,
+  book: INullableBook,
 ) {
   if (!book) {
     return;
@@ -66,7 +66,7 @@ const BookContainer = React.memo<IProps>(
         <React.Fragment>
           <BookHeader
             book={book}
-            onEdit={() => navigateToEditScreen(book, navigation)}
+            onEdit={() => navigateToEditScreen(navigation, book)}
           />
           <ChaptersContainer bookId={book.id} navigation={navigation} />
         </React.Fragment>
