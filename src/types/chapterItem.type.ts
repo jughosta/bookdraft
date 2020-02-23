@@ -1,4 +1,4 @@
-import { IEntity, IEntityData } from './entity';
+import { IEntity, IEntityData } from './entity.type';
 
 export enum ChapterItemState {
   idea = 'idea',

@@ -2,7 +2,7 @@ import { destroy, insert, queryAll, update } from '../reducers/storageSlice';
 import { DBTable } from './db/dbTables';
 
 import { IBook, IBookData } from '../types/book.type';
-import { IEntityData } from '../types/entity';
+import { IEntityData } from '../types/entity.type';
 import { IChapter, IChapterData } from '../types/chapter.type';
 import { IChapterItem, IChapterItemData } from '../types/chapterItem.type';
 

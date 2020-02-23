@@ -1,4 +1,4 @@
-import { IEntity, IEntityData } from './entity';
+import { IEntity, IEntityData } from './entity.type';
 
 export interface IChapterData extends IEntityData {
   title: string;
