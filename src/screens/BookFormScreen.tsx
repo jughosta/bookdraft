@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   NavigationStackProp,
   NavigationStackScreenProps,
@@ -23,7 +23,6 @@ import { ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
   navigation: NavigationStackProp<NavigationParamsBookForm>;
-  dispatch: ThunkDispatch;
 }
 
 async function handleSubmit(
@@ -60,10 +59,11 @@ async function handleDelete(
   }
 }
 
-const BookFormScreen = ({ navigation, dispatch }: IProps) => {
-  useEffect(() => {
-    const book = navigation.getParam('book');
+const BookFormScreen = ({ navigation }: IProps) => {
+  const dispatch = useDispatch();
+  const book = navigation.getParam('book');
 
+  useEffect(() => {
     if (book) {
       navigation.setParams({
         onConfirmDeletion: confirmDeletion('book and its content', () =>
@@ -72,8 +72,6 @@ const BookFormScreen = ({ navigation, dispatch }: IProps) => {
       });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const book = navigation.getParam('book');
 
   return (
     <Screen scrollable>
@@ -99,4 +97,4 @@ BookFormScreen.navigationOptions = ({
   };
 };
 
-export default connect()(BookFormScreen);
+export default BookFormScreen;

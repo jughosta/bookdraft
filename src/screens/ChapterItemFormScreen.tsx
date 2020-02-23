@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   NavigationStackProp,
   NavigationStackScreenProps,
@@ -27,7 +27,6 @@ import { ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
   navigation: NavigationStackProp<NavigationParamsChapterItemForm>;
-  dispatch: ThunkDispatch;
 }
 
 async function handleSubmit(
@@ -66,10 +65,11 @@ async function handleDelete(
   }
 }
 
-const ChapterItemFormScreen = ({ navigation, dispatch }: IProps) => {
-  useEffect(() => {
-    const chapterItem = navigation.getParam('chapterItem');
+const ChapterItemFormScreen = ({ navigation }: IProps) => {
+  const dispatch = useDispatch();
+  const chapterItem = navigation.getParam('chapterItem');
 
+  useEffect(() => {
     if (chapterItem) {
       navigation.setParams({
         onConfirmDeletion: confirmDeletion('scene', () =>
@@ -78,8 +78,6 @@ const ChapterItemFormScreen = ({ navigation, dispatch }: IProps) => {
       });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const chapterItem = navigation.getParam('chapterItem');
 
   return (
     <Screen scrollable>
@@ -105,4 +103,4 @@ ChapterItemFormScreen.navigationOptions = ({
   };
 };
 
-export default connect()(ChapterItemFormScreen);
+export default ChapterItemFormScreen;
