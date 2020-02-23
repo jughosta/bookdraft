@@ -16,6 +16,7 @@ export type NavigationParamsBookForm = {
 
 export type NavigationParamsChapter = {
   chapterId: number;
+  chapterBookId: number;
 };
 
 export type NavigationParamsChapterForm = {

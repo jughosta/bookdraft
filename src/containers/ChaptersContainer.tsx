@@ -30,6 +30,7 @@ function navigateToViewScreen(
 ) {
   const params: NavigationParamsChapter = {
     chapterId: chapter.id,
+    chapterBookId: chapter.bookId,
   };
 
   navigation.navigate(Screens.Chapter, params);

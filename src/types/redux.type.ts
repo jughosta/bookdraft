@@ -4,7 +4,7 @@ import { ThunkAction, ThunkDispatch as TDispatch } from 'redux-thunk';
 import { ConnectingStatus, LoadingStatus } from '../utils/redux';
 
 import { IBook, INullableBook } from './book.type';
-import { IChapter, INullableChapter } from './chapter.type';
+import { IChapterWithCounters, INullableChapter } from './chapter.type';
 import { IChapterItem, INullableChapterItem } from './chapterItem.type';
 
 export type BookState = {
@@ -23,7 +23,7 @@ export type ChapterState = {
 };
 
 export type ChaptersState = {
-  list: IChapter[];
+  list: IChapterWithCounters[];
   loadingStatus: LoadingStatus;
 };
 

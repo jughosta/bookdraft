@@ -1,4 +1,5 @@
 import '../components/Welcome/Welcome.story';
+import '../../src/components/Badge/Badge.story';
 import '../../src/components/Blank/Blank.story';
 import '../../src/components/BookCard/BookCard.story';
 import '../../src/components/BookHeader/BookHeader.story';

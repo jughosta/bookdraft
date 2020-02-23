@@ -7,4 +7,10 @@ export interface IChapterData extends IEntityData {
 
 export interface IChapter extends IEntity, IChapterData {}
 
+export interface IChapterWithCounters extends IChapter {
+  countIdea: number;
+  countInProgress: number;
+  countDone: number;
+}
+
 export type INullableChapter = IChapter | null;
