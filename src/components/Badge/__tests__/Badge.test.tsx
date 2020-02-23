@@ -12,6 +12,6 @@ describe('<Badge />', () => {
     const instance = renderer.create(
       <Badge counter={1} backgroundColor={Palette.green.v400} />,
     );
-    expect(instance.root.findByType(Text).props.children).toBe('1');
+    expect(instance.root.findByType(Text).props.children).toBe(1);
   });
 });

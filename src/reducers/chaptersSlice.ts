@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getChapters } from '../utils/repository';
+import { getChaptersWithCounters } from '../utils/repository';
 import { LoadingStatus } from '../utils/redux';
 
-import { IChapter } from '../types/chapter.type';
+import { IChapterWithCounters, IChapter } from '../types/chapter.type';
 import { ChaptersState, ThunkDispatch, ThunkResult } from '../types/redux.type';
 
 const initialState: ChaptersState = {
@@ -18,11 +18,17 @@ const chaptersSlice = createSlice({
     loadingStatusChanged(state, action: PayloadAction<LoadingStatus>) {
       state.loadingStatus = action.payload;
     },
-    loaded(state, action: PayloadAction<IChapter[]>) {
+    loaded(state, action: PayloadAction<IChapterWithCounters[]>) {
       state.list = action.payload;
     },
     created(state, action: PayloadAction<IChapter>) {
-      state.list.push(action.payload);
+      const newChapterWithCounters: IChapterWithCounters = {
+        ...action.payload,
+        countDone: 0,
+        countIdea: 0,
+        countInProgress: 0,
+      };
+      state.list.push(newChapterWithCounters);
     },
     edited(state, action: PayloadAction<IChapter>) {
       const editedChapter = action.payload;
@@ -30,7 +36,11 @@ const chaptersSlice = createSlice({
         c => c.id === editedChapter.id,
       );
       if (prevChapterIndex >= 0) {
-        state.list[prevChapterIndex] = editedChapter;
+        const editedChapterWithCounters: IChapterWithCounters = {
+          ...state.list[prevChapterIndex],
+          ...editedChapter,
+        };
+        state.list[prevChapterIndex] = editedChapterWithCounters;
       }
     },
     deleted(state, action: PayloadAction<number>) {
@@ -63,7 +73,7 @@ export const fetchChapters = (
     if (loadingStatus !== LoadingStatus.initial) {
       await dispatch(loadingStatusChanged(LoadingStatus.loading));
     }
-    const chapters = await getChapters(bookId);
+    const chapters = await getChaptersWithCounters(bookId);
     await dispatch(loaded(chapters));
     await dispatch(loadingStatusChanged(LoadingStatus.loaded));
   } catch (error) {

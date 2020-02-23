@@ -3,15 +3,29 @@ import { DBTable } from './db/dbTables';
 
 import { IBook, IBookData } from '../types/book.type';
 import { IEntityData } from '../types/entity.type';
-import { IChapter, IChapterData } from '../types/chapter.type';
-import { IChapterItem, IChapterItemData } from '../types/chapterItem.type';
+import {
+  IChapter,
+  IChapterData,
+  IChapterWithCounters,
+} from '../types/chapter.type';
+import {
+  ChapterItemState,
+  IChapterItem,
+  IChapterItemData,
+} from '../types/chapterItem.type';
 
 export const getEntities = async <T>(
   table: DBTable,
+  selectStatement?: string,
   whereStatement?: string,
   params?: any[],
 ): Promise<T[]> => {
-  const entities = await queryAll(table, whereStatement, params);
+  const entities = await queryAll(
+    table,
+    selectStatement,
+    whereStatement,
+    params,
+  );
 
   if (!entities) {
     throw Error('No entities found');
@@ -21,7 +35,7 @@ export const getEntities = async <T>(
 };
 
 export const getEntity = async <T>(table: DBTable, id: number): Promise<T> => {
-  const entities = await queryAll(table, 'id = ? LIMIT 1', [id]);
+  const entities = await queryAll(table, undefined, 'id = ? LIMIT 1', [id]);
 
   if (!entities || entities.length !== 1) {
     throw Error('This entity does not exist');
@@ -64,7 +78,7 @@ export const destroyEntity = async <T>(
   const rowsAffected = await destroy(table, id);
 
   if (!rowsAffected || rowsAffected !== 1) {
-    throw Error('Error while deleting the book');
+    throw Error('Error while deleting the entity');
   }
 };
 
@@ -84,7 +98,32 @@ export const destroyBook = (id: number): Promise<void> =>
   destroyEntity<IBook>(DBTable.book, id);
 
 export const getChapters = (bookId: number): Promise<IChapter[]> =>
-  getEntities<IChapter>(DBTable.chapter, 'bookId = ?', [bookId]);
+  getEntities<IChapter>(DBTable.chapter, undefined, 'bookId = ?', [bookId]);
+
+export const getChaptersWithCounters = (
+  bookId: number,
+): Promise<IChapterWithCounters[]> =>
+  getEntities<IChapterWithCounters>(
+    DBTable.chapter,
+    `(SELECT COUNT(CI.id) FROM ${DBTable.chapterItem} CI WHERE CI.chapterId = ${
+      DBTable.chapter
+    }.id and CI.state = ?) AS countDone, (SELECT COUNT(CI.id) FROM ${
+      DBTable.chapterItem
+    } CI WHERE CI.chapterId = ${
+      DBTable.chapter
+    }.id and CI.state = ?) AS countInProgress, (SELECT COUNT(CI.id) FROM ${
+      DBTable.chapterItem
+    } CI WHERE CI.chapterId = ${
+      DBTable.chapter
+    }.id and CI.state = ?) AS countIdea`,
+    'bookId = ?',
+    [
+      ChapterItemState.done,
+      ChapterItemState.inProgress,
+      ChapterItemState.idea,
+      bookId,
+    ],
+  );
 
 export const getChapter = (id: number): Promise<IChapter> =>
   getEntity<IChapter>(DBTable.chapter, id);
@@ -101,7 +140,9 @@ export const destroyChapter = (id: number): Promise<void> =>
   destroyEntity<IChapter>(DBTable.chapter, id);
 
 export const getChapterItems = (chapterId: number): Promise<IChapterItem[]> =>
-  getEntities<IChapterItem>(DBTable.chapterItem, 'chapterId = ?', [chapterId]);
+  getEntities<IChapterItem>(DBTable.chapterItem, undefined, 'chapterId = ?', [
+    chapterId,
+  ]);
 
 export const getChapterItem = (id: number): Promise<IChapterItem> =>
   getEntity<IChapterItem>(DBTable.chapterItem, id);

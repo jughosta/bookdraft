@@ -130,6 +130,7 @@ export const closeDatabase = (): ThunkResult<
 
 export const queryAll = async (
   table: string,
+  selectStatement?: string,
   whereStatement?: string,
   params?: any[],
 ): Promise<any[] | undefined> => {
@@ -139,9 +140,9 @@ export const queryAll = async (
     }
 
     const [resultSets] = await dbProvider.executeSql(
-      `SELECT * FROM ${table}${
-        whereStatement ? ` WHERE ${whereStatement}` : ''
-      } `,
+      `SELECT ${table}.* ${
+        selectStatement ? `,${selectStatement}` : ''
+      } FROM ${table}${whereStatement ? ` WHERE ${whereStatement}` : ''} `,
       params,
     );
     return resultSets.rows.raw();

@@ -22,6 +22,7 @@ const Badge = ({ counter, backgroundColor }: IProps) => {
 
 const styles = StyleSheet.create({
   badge: {
+    marginHorizontal: 2,
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 16,
@@ -30,6 +31,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: Palette.white,
+    minWidth: 16,
+    textAlign: 'center',
   },
 });
 
