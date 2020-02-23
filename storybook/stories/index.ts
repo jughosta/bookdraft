@@ -1,10 +1,12 @@
 import '../components/Welcome/Welcome.story';
 import '../../src/components/Blank/Blank.story';
 import '../../src/components/BookCard/BookCard.story';
+import '../../src/components/BookHeader/BookHeader.story';
 import '../../src/components/BookList/BookList.story';
 import '../../src/components/Button/Button.story';
 import '../../src/icons/Icons.story';
 import '../../src/components/ChapterCard/ChapterCard.story';
+import '../../src/components/ChapterHeader/ChapterHeader.story';
 import '../../src/components/ChapterList/ChapterList.story';
 import '../../src/components/ChapterItemCard/ChapterItemCard.story';
 import '../../src/components/ChapterItemList/ChapterItemList.story';

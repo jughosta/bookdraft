@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   NavigationStackProp,
   NavigationStackScreenProps,
@@ -23,80 +23,78 @@ import { ThunkDispatch } from '../types/redux.type';
 
 interface IProps {
   navigation: NavigationStackProp<NavigationParamsBookForm>;
-  dispatch: ThunkDispatch;
 }
 
-class BookFormScreen extends React.Component<IProps> {
-  static navigationOptions = ({
-    navigation,
-  }: NavigationStackScreenProps<NavigationParamsBookForm>) => {
-    return {
-      title: navigation.getParam('book') ? 'Book details' : 'New book',
-      headerRight: () =>
-        navigation.getParam('book') ? (
-          <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
-            <IconTrash fillColor={Palette.gray.v900} size={20} />
-          </Touchable>
-        ) : null,
-    };
+async function handleSubmit(
+  values: FormValues,
+  navigation: NavigationStackProp<NavigationParamsBookForm>,
+  dispatch: ThunkDispatch,
+) {
+  const bookId = navigation.getParam('book', {}).id;
+  const bookData: IBookData = {
+    title: values.title,
   };
 
-  componentDidMount(): void {
-    const { navigation } = this.props;
-    const book = navigation.getParam('book');
+  try {
+    if (bookId) {
+      await dispatch(editBook(bookId, bookData));
+    } else {
+      await dispatch(createBook(bookData));
+    }
+    navigation.goBack();
+  } catch (error) {
+    console.warn(error);
+  }
+}
 
+async function handleDelete(
+  navigation: NavigationStackProp<NavigationParamsBookForm>,
+  dispatch: ThunkDispatch,
+) {
+  try {
+    await dispatch(deleteBook(navigation.getParam('book').id));
+    navigation.pop(2);
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+const BookFormScreen = ({ navigation }: IProps) => {
+  const dispatch = useDispatch();
+  const book = navigation.getParam('book');
+
+  useEffect(() => {
     if (book) {
       navigation.setParams({
-        onConfirmDeletion: confirmDeletion(
-          'book and its content',
-          this.handleDelete,
+        onConfirmDeletion: confirmDeletion('book and its content', () =>
+          handleDelete(navigation, dispatch),
         ),
       });
     }
-  }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  handleDelete = async () => {
-    const { navigation, dispatch } = this.props;
+  return (
+    <Screen scrollable>
+      <Form
+        fields={getBookFormFields(book)}
+        onSubmit={values => handleSubmit(values, navigation, dispatch)}
+      />
+    </Screen>
+  );
+};
 
-    try {
-      await dispatch(deleteBook(navigation.getParam('book').id));
-      navigation.pop(2);
-    } catch (error) {
-      console.warn(error);
-    }
+BookFormScreen.navigationOptions = ({
+  navigation,
+}: NavigationStackScreenProps<NavigationParamsBookForm>) => {
+  return {
+    title: navigation.getParam('book') ? 'Book details' : 'New book',
+    headerRight: () =>
+      navigation.getParam('book') ? (
+        <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
+          <IconTrash fillColor={Palette.gray.v900} size={20} />
+        </Touchable>
+      ) : null,
   };
+};
 
-  handleSubmit = async (values: FormValues) => {
-    const { navigation, dispatch } = this.props;
-    const bookId = navigation.getParam('book', {}).id;
-    const bookData: IBookData = {
-      title: values.title,
-    };
-
-    try {
-      if (bookId) {
-        await dispatch(editBook(bookId, bookData));
-      } else {
-        await dispatch(createBook(bookData));
-      }
-      navigation.goBack();
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-
-  renderContent() {
-    const { navigation } = this.props;
-    const book = navigation.getParam('book');
-
-    return (
-      <Form fields={getBookFormFields(book)} onSubmit={this.handleSubmit} />
-    );
-  }
-
-  render() {
-    return <Screen scrollable>{this.renderContent()}</Screen>;
-  }
-}
-
-export default connect()(BookFormScreen);
+export default BookFormScreen;

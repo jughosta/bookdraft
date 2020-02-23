@@ -1,16 +1,15 @@
-import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import Blank from '../components/Blank/Blank';
+import BookHeader from '../components/BookHeader/BookHeader';
 import CenterView from '../components/CenterView';
 import ChaptersContainer from '../containers/ChaptersContainer';
-import Button from '../components/Button/Button';
 
 import { fetchBook, resetBook } from '../reducers/bookSlice';
 
-import { Palette } from '../utils/theme';
 import { LoadingStatus } from '../utils/redux';
 import { Screens } from '../utils/navigation';
 
@@ -18,105 +17,69 @@ import {
   NavigationParamsBook,
   NavigationParamsBookForm,
 } from '../types/navigation.type';
-import { RootState, ThunkDispatch } from '../types/redux.type';
+import { RootState } from '../types/redux.type';
 import { INullableBook } from '../types/book.type';
 
 interface IProps {
   bookId: number;
-  book: INullableBook;
-  loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBook>;
-  dispatch: ThunkDispatch;
 }
 
-class BookContainer extends React.Component<IProps> {
-  componentDidMount(): void {
-    const { bookId, dispatch } = this.props;
-
-    dispatch(fetchBook(bookId));
+function navigateToEditScreen(
+  navigation: NavigationStackProp<NavigationParamsBook>,
+  book: INullableBook,
+) {
+  if (!book) {
+    return;
   }
 
-  componentWillUnmount(): void {
-    const { dispatch } = this.props;
-
-    dispatch(resetBook());
-  }
-
-  handleEdit = () => {
-    const { book, navigation } = this.props;
-
-    if (!book) {
-      return;
-    }
-
-    const params: NavigationParamsBookForm = {
-      book,
-    };
-
-    navigation.navigate(Screens.BookForm, params);
+  const params: NavigationParamsBookForm = {
+    book,
   };
 
-  renderHeader() {
-    const { book } = this.props;
+  navigation.navigate(Screens.BookForm, params);
+}
 
-    if (!book) {
-      return null;
-    }
+const BookContainer = React.memo<IProps>(({ bookId, navigation }) => {
+  const dispatch = useDispatch();
+  const loadingStatus = useSelector(
+    (state: RootState) => state.book.loadingStatus,
+  );
+  const book = useSelector((state: RootState) => state.book.book);
 
-    return (
-      <View style={styles.header}>
-        <Text style={styles.title}>{book.title}</Text>
-        <Button title="Edit details" onPress={this.handleEdit} />
-      </View>
-    );
-  }
+  useEffect(() => {
+    dispatch(fetchBook(bookId));
 
-  render() {
-    const { book, loadingStatus, navigation } = this.props;
+    return () => {
+      dispatch(resetBook());
+    };
+  }, [bookId, dispatch]);
 
-    if (loadingStatus === LoadingStatus.failed) {
-      return (
-        <CenterView>
-          <Blank message="Book not found" />
-        </CenterView>
-      );
-    }
-
-    if (loadingStatus === LoadingStatus.loaded && book) {
-      return (
-        <React.Fragment>
-          {this.renderHeader()}
-          <ChaptersContainer bookId={book.id} navigation={navigation} />
-        </React.Fragment>
-      );
-    }
-
+  if (loadingStatus === LoadingStatus.failed) {
     return (
       <CenterView>
-        <ActivityIndicator />
+        <Blank message="Book not found" />
       </CenterView>
     );
   }
-}
 
-const styles = StyleSheet.create({
-  header: {
-    paddingVertical: 24,
-    paddingHorizontal: 48,
-    alignItems: 'center',
-  },
-  title: {
-    marginBottom: 16,
-    fontSize: 24,
-    fontWeight: '600',
-    textAlign: 'center',
-    color: Palette.gray.v900,
-  },
+  if (loadingStatus === LoadingStatus.loaded && book) {
+    return (
+      <React.Fragment>
+        <BookHeader
+          book={book}
+          onEdit={() => navigateToEditScreen(navigation, book)}
+        />
+        <ChaptersContainer bookId={book.id} navigation={navigation} />
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <CenterView>
+      <ActivityIndicator />
+    </CenterView>
+  );
 });
 
-const mapStateToProps = ({ book }: RootState) => ({
-  book: book.book,
-  loadingStatus: book.loadingStatus,
-});
-
-export default connect(mapStateToProps)(BookContainer);
+export default BookContainer;

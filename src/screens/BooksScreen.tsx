@@ -10,19 +10,14 @@ interface IProps {
   navigation: NavigationStackProp<NavigationParamsBooks>;
 }
 
-class BooksScreen extends React.Component<IProps> {
-  static navigationOptions = {
-    title: 'Books',
-  };
+const BooksScreen = ({ navigation }: IProps) => (
+  <Screen>
+    <BooksContainer navigation={navigation} />
+  </Screen>
+);
 
-  render() {
-    const { navigation } = this.props;
-    return (
-      <Screen>
-        <BooksContainer navigation={navigation} />
-      </Screen>
-    );
-  }
-}
+BooksScreen.navigationOptions = {
+  title: 'Books',
+};
 
 export default BooksScreen;

@@ -1,57 +1,42 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
+
+import CenterView from '../components/CenterView';
 
 import { closeDatabase, openDatabase } from '../reducers/storageSlice';
 
-import { RootState, ThunkDispatch } from '../types/redux.type';
 import { ConnectingStatus } from '../utils/redux';
-import { ActivityIndicator } from 'react-native';
-import CenterView from '../components/CenterView';
 
-type AppStateValue = 'active' | 'inactive';
+import { RootState } from '../types/redux.type';
 
 interface IProps {
-  connectingStatus: ConnectingStatus;
   children: JSX.Element;
-  dispatch: ThunkDispatch;
 }
 
-class StorageProvider extends React.Component<IProps> {
-  componentDidMount(): void {
-    this.handleAppStateChanged('active');
-  }
+const StorageProvider = ({ children }: IProps) => {
+  const dispatch = useDispatch();
+  const connectingStatus = useSelector(
+    (state: RootState) => state.storage.connectingStatus,
+  );
 
-  componentWillUnmount(): void {
-    this.handleAppStateChanged('inactive');
-  }
+  useEffect(() => {
+    dispatch(openDatabase());
 
-  handleAppStateChanged = (nextAppState: AppStateValue) => {
-    const { dispatch } = this.props;
-
-    if (nextAppState === 'active') {
-      dispatch(openDatabase());
-    } else {
+    return () => {
       dispatch(closeDatabase());
-    }
-  };
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  render() {
-    const { connectingStatus, children } = this.props;
-
-    if (connectingStatus === ConnectingStatus.initial) {
-      return (
-        <CenterView>
-          <ActivityIndicator />
-        </CenterView>
-      );
-    }
-
-    return children;
+  if (connectingStatus === ConnectingStatus.initial) {
+    return (
+      <CenterView>
+        <ActivityIndicator />
+      </CenterView>
+    );
   }
-}
 
-const mapStateToProps = ({ storage }: RootState) => ({
-  connectingStatus: storage.connectingStatus,
-});
+  return children;
+};
 
-export default connect(mapStateToProps)(StorageProvider);
+export default StorageProvider;
