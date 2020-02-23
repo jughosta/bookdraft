@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import Blank from '../components/Blank/Blank';
@@ -17,15 +17,12 @@ import {
   NavigationParamsBook,
   NavigationParamsBookForm,
 } from '../types/navigation.type';
-import { RootState, ThunkDispatch } from '../types/redux.type';
+import { RootState } from '../types/redux.type';
 import { INullableBook } from '../types/book.type';
 
 interface IProps {
   bookId: number;
-  book: INullableBook;
-  loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBook>;
-  dispatch: ThunkDispatch;
 }
 
 function navigateToEditScreen(
@@ -43,47 +40,46 @@ function navigateToEditScreen(
   navigation.navigate(Screens.BookForm, params);
 }
 
-const BookContainer = React.memo<IProps>(
-  ({ bookId, book, loadingStatus, navigation, dispatch }) => {
-    useEffect(() => {
-      dispatch(fetchBook(bookId));
+const BookContainer = React.memo<IProps>(({ bookId, navigation }) => {
+  const dispatch = useDispatch();
+  const loadingStatus = useSelector(
+    (state: RootState) => state.book.loadingStatus,
+  );
+  const book = useSelector((state: RootState) => state.book.book);
 
-      return () => {
-        dispatch(resetBook());
-      };
-    }, [bookId, dispatch]);
+  useEffect(() => {
+    dispatch(fetchBook(bookId));
 
-    if (loadingStatus === LoadingStatus.failed) {
-      return (
-        <CenterView>
-          <Blank message="Book not found" />
-        </CenterView>
-      );
-    }
+    return () => {
+      dispatch(resetBook());
+    };
+  }, [bookId, dispatch]);
 
-    if (loadingStatus === LoadingStatus.loaded && book) {
-      return (
-        <React.Fragment>
-          <BookHeader
-            book={book}
-            onEdit={() => navigateToEditScreen(navigation, book)}
-          />
-          <ChaptersContainer bookId={book.id} navigation={navigation} />
-        </React.Fragment>
-      );
-    }
-
+  if (loadingStatus === LoadingStatus.failed) {
     return (
       <CenterView>
-        <ActivityIndicator />
+        <Blank message="Book not found" />
       </CenterView>
     );
-  },
-);
+  }
 
-const mapStateToProps = ({ book }: RootState) => ({
-  book: book.book,
-  loadingStatus: book.loadingStatus,
+  if (loadingStatus === LoadingStatus.loaded && book) {
+    return (
+      <React.Fragment>
+        <BookHeader
+          book={book}
+          onEdit={() => navigateToEditScreen(navigation, book)}
+        />
+        <ChaptersContainer bookId={book.id} navigation={navigation} />
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <CenterView>
+      <ActivityIndicator />
+    </CenterView>
+  );
 });
 
-export default connect(mapStateToProps)(BookContainer);
+export default BookContainer;
