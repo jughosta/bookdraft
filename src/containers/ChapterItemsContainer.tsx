@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import CenterView from '../components/CenterView';
 import ChapterItemList from '../components/ChapterItemList/ChapterItemList';
@@ -18,15 +18,12 @@ import {
   NavigationParamsChapterItemForm,
   NavigationParamsChapter,
 } from '../types/navigation.type';
-import { RootState, ThunkDispatch } from '../types/redux.type';
+import { RootState } from '../types/redux.type';
 import { IChapterItem } from '../types/chapterItem.type';
 
 interface IProps {
   chapterId: number;
-  chapterItems: IChapterItem[];
-  loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsChapter>;
-  dispatch: ThunkDispatch;
 }
 
 function navigateToCreateScreen(
@@ -53,7 +50,15 @@ function navigateToEditScreen(
 }
 
 const ChaptersItemsContainer = React.memo<IProps>(
-  ({ chapterId, chapterItems, loadingStatus, navigation, dispatch }) => {
+  ({ chapterId, navigation }) => {
+    const dispatch = useDispatch();
+    const loadingStatus = useSelector(
+      (state: RootState) => state.chapterItems.loadingStatus,
+    );
+    const chapterItems = useSelector(
+      (state: RootState) => state.chapterItems.list,
+    );
+
     useEffect(() => {
       dispatch(fetchChapterItems(chapterId));
 
@@ -82,9 +87,4 @@ const ChaptersItemsContainer = React.memo<IProps>(
   },
 );
 
-const mapStateToProps = ({ chapterItems }: RootState) => ({
-  chapterItems: chapterItems.list,
-  loadingStatus: chapterItems.loadingStatus,
-});
-
-export default connect(mapStateToProps)(ChaptersItemsContainer);
+export default ChaptersItemsContainer;
