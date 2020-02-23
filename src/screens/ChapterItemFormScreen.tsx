@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   NavigationStackProp,
@@ -30,79 +30,79 @@ interface IProps {
   dispatch: ThunkDispatch;
 }
 
-class ChapterItemFormScreen extends React.Component<IProps> {
-  static navigationOptions = ({
-    navigation,
-  }: NavigationStackScreenProps<NavigationParamsChapterItemForm>) => {
-    return {
-      title: navigation.getParam('chapterItem') ? 'Scene' : 'New scene',
-      headerRight: () =>
-        navigation.getParam('chapterItem') ? (
-          <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
-            <IconTrash fillColor={Palette.gray.v900} size={20} />
-          </Touchable>
-        ) : null,
-    };
+async function handleSubmit(
+  values: FormValues,
+  navigation: NavigationStackProp<NavigationParamsChapterItemForm>,
+  dispatch: ThunkDispatch,
+) {
+  const chapterItemId = navigation.getParam('chapterItem', {}).id;
+  const chapterItemData: IChapterItemData = {
+    content: values.content,
+    state: values.state as ChapterItemState,
+    chapterId: navigation.getParam('chapterId'),
   };
 
-  componentDidMount(): void {
-    const { navigation } = this.props;
+  try {
+    if (chapterItemId) {
+      await dispatch(editChapterItem(chapterItemId, chapterItemData));
+    } else {
+      await dispatch(createChapterItem(chapterItemData));
+    }
+    navigation.goBack();
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+async function handleDelete(
+  navigation: NavigationStackProp<NavigationParamsChapterItemForm>,
+  dispatch: ThunkDispatch,
+) {
+  try {
+    await dispatch(deleteChapterItem(navigation.getParam('chapterItem').id));
+    navigation.goBack();
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+const ChapterItemFormScreen = ({ navigation, dispatch }: IProps) => {
+  useEffect(() => {
     const chapterItem = navigation.getParam('chapterItem');
 
     if (chapterItem) {
       navigation.setParams({
-        onConfirmDeletion: confirmDeletion('scene', this.handleDelete),
+        onConfirmDeletion: confirmDeletion('scene', () =>
+          handleDelete(navigation, dispatch),
+        ),
       });
     }
-  }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  handleDelete = async () => {
-    const { navigation, dispatch } = this.props;
+  const chapterItem = navigation.getParam('chapterItem');
 
-    try {
-      await dispatch(deleteChapterItem(navigation.getParam('chapterItem').id));
-      navigation.goBack();
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-
-  handleSubmit = async (values: FormValues) => {
-    const { navigation, dispatch } = this.props;
-    const chapterItemId = navigation.getParam('chapterItem', {}).id;
-    const chapterItemData: IChapterItemData = {
-      content: values.content,
-      state: values.state as ChapterItemState,
-      chapterId: navigation.getParam('chapterId'),
-    };
-
-    try {
-      if (chapterItemId) {
-        await dispatch(editChapterItem(chapterItemId, chapterItemData));
-      } else {
-        await dispatch(createChapterItem(chapterItemData));
-      }
-      navigation.goBack();
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-
-  renderContent() {
-    const { navigation } = this.props;
-    const chapterItem = navigation.getParam('chapterItem');
-
-    return (
+  return (
+    <Screen scrollable>
       <Form
         fields={getChapterItemFormFields(chapterItem)}
-        onSubmit={this.handleSubmit}
+        onSubmit={values => handleSubmit(values, navigation, dispatch)}
       />
-    );
-  }
+    </Screen>
+  );
+};
 
-  render() {
-    return <Screen scrollable>{this.renderContent()}</Screen>;
-  }
-}
+ChapterItemFormScreen.navigationOptions = ({
+  navigation,
+}: NavigationStackScreenProps<NavigationParamsChapterItemForm>) => {
+  return {
+    title: navigation.getParam('chapterItem') ? 'Scene' : 'New scene',
+    headerRight: () =>
+      navigation.getParam('chapterItem') ? (
+        <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
+          <IconTrash fillColor={Palette.gray.v900} size={20} />
+        </Touchable>
+      ) : null,
+  };
+};
 
 export default connect()(ChapterItemFormScreen);
