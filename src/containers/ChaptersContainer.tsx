@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import CenterView from '../components/CenterView';
 import ChapterList from '../components/ChapterList/ChapterList';
@@ -16,15 +16,12 @@ import {
   NavigationParamsChapter,
   NavigationParamsBook,
 } from '../types/navigation.type';
-import { RootState, ThunkDispatch } from '../types/redux.type';
+import { RootState } from '../types/redux.type';
 import { IChapter } from '../types/chapter.type';
 
 interface IProps {
   bookId: number;
-  chapters: IChapter[];
-  loadingStatus: LoadingStatus;
   navigation: NavigationStackProp<NavigationParamsBook>;
-  dispatch: ThunkDispatch;
 }
 
 function navigateToViewScreen(
@@ -49,37 +46,36 @@ function navigateToCreateScreen(
   navigation.navigate(Screens.ChapterForm, params);
 }
 
-const ChaptersContainer = React.memo<IProps>(
-  ({ bookId, chapters, loadingStatus, navigation, dispatch }) => {
-    useEffect(() => {
-      dispatch(fetchChapters(bookId));
+const ChaptersContainer = React.memo<IProps>(({ bookId, navigation }) => {
+  const dispatch = useDispatch();
+  const loadingStatus = useSelector(
+    (state: RootState) => state.chapters.loadingStatus,
+  );
+  const chapters = useSelector((state: RootState) => state.chapters.list);
 
-      return () => {
-        dispatch(resetChapters());
-      };
-    }, [bookId, dispatch]);
+  useEffect(() => {
+    dispatch(fetchChapters(bookId));
 
-    return (
-      <React.Fragment>
-        {loadingStatus === LoadingStatus.initial ? (
-          <CenterView>
-            <ActivityIndicator />
-          </CenterView>
-        ) : (
-          <ChapterList
-            chapters={chapters}
-            onCreate={() => navigateToCreateScreen(navigation, bookId)}
-            onPress={chapter => navigateToViewScreen(navigation, chapter)}
-          />
-        )}
-      </React.Fragment>
-    );
-  },
-);
+    return () => {
+      dispatch(resetChapters());
+    };
+  }, [bookId, dispatch]);
 
-const mapStateToProps = ({ chapters }: RootState) => ({
-  chapters: chapters.list,
-  loadingStatus: chapters.loadingStatus,
+  return (
+    <React.Fragment>
+      {loadingStatus === LoadingStatus.initial ? (
+        <CenterView>
+          <ActivityIndicator />
+        </CenterView>
+      ) : (
+        <ChapterList
+          chapters={chapters}
+          onCreate={() => navigateToCreateScreen(navigation, bookId)}
+          onPress={chapter => navigateToViewScreen(navigation, chapter)}
+        />
+      )}
+    </React.Fragment>
+  );
 });
 
-export default connect(mapStateToProps)(ChaptersContainer);
+export default ChaptersContainer;
