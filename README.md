@@ -39,7 +39,7 @@ Each scene can be marked as 'Work in progress', 'Done' or 'Idea / TODO' to track
 - [ ] Improve UI/UX
 - [ ] Add context menu actions for books, chapters, scenes: share, export, move to... etc
 - [ ] Allow reordering of chapters and scenes
-- [ ] Visualize the progress of writing a book/chapter based on the existing scenes statuses
+- [x] Visualize the progress of writing a book/chapter based on the existing scenes statuses
 - [ ] Test the connection to SQLite DB properly and might be switch to another storage type (e.g. use an API) 
 - [ ] Backups if the app stays offline-only
 - [ ] Write tests for reducers
