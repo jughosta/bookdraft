@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { NavigationStackProp } from 'react-navigation-stack';
 import { useSelector, useDispatch } from 'react-redux';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import CenterView from '../components/CenterView';
 import ChapterList from '../components/ChapterList/ChapterList';
 
-import { Screens } from '../utils/navigation';
 import { LoadingStatus } from '../utils/redux';
 
 import { fetchChapters, resetChapters } from '../reducers/chaptersSlice';
@@ -14,18 +13,23 @@ import { fetchChapters, resetChapters } from '../reducers/chaptersSlice';
 import {
   NavigationParamsChapterForm,
   NavigationParamsChapter,
-  NavigationParamsBook,
 } from '../types/navigation.type';
 import { RootState } from '../types/redux.type';
 import { IChapter } from '../types/chapter.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'BookScreen'
+>;
 
 interface IProps {
   bookId: number;
-  navigation: NavigationStackProp<NavigationParamsBook>;
+  navigation: ScreenNavigationProp;
 }
 
 function navigateToViewScreen(
-  navigation: NavigationStackProp<NavigationParamsBook>,
+  navigation: ScreenNavigationProp,
   chapter: IChapter,
 ) {
   const params: NavigationParamsChapter = {
@@ -33,18 +37,18 @@ function navigateToViewScreen(
     chapterBookId: chapter.bookId,
   };
 
-  navigation.navigate(Screens.Chapter, params);
+  navigation.navigate('ChapterScreen', params);
 }
 
 function navigateToCreateScreen(
-  navigation: NavigationStackProp<NavigationParamsBook>,
+  navigation: ScreenNavigationProp,
   bookId: number,
 ) {
   const params: NavigationParamsChapterForm = {
     bookId,
   };
 
-  navigation.navigate(Screens.ChapterForm, params);
+  navigation.navigate('ChapterFormScreen', params);
 }
 
 const ChaptersContainer = React.memo<IProps>(({ bookId, navigation }) => {

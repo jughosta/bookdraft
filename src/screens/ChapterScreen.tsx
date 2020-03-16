@@ -1,39 +1,43 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
 import Screen from '../components/Screen';
 import ChapterContainer from '../containers/ChapterContainer';
 
 import { fetchChapters } from '../reducers/chaptersSlice';
 
-import { NavigationParamsChapter } from '../types/navigation.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChapterScreen'
+>;
+type ScreenRouteProp = RouteProp<RootStackParamList, 'ChapterScreen'>;
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsChapter>;
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 }
 
-const ChapterScreen = ({ navigation }: IProps) => {
+const ChapterScreen = ({ navigation, route }: IProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
-      dispatch(fetchChapters(navigation.getParam('chapterBookId')));
+      dispatch(fetchChapters(route.params.chapterBookId));
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Screen>
       <ChapterContainer
-        chapterId={navigation.getParam('chapterId')}
+        chapterId={route.params.chapterId}
         navigation={navigation}
       />
     </Screen>
   );
-};
-
-ChapterScreen.navigationOptions = {
-  title: 'Chapter',
 };
 
 export default ChapterScreen;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Blank from '../components/Blank/Blank';
 import BookHeader from '../components/BookHeader/BookHeader';
@@ -11,22 +11,24 @@ import ChaptersContainer from '../containers/ChaptersContainer';
 import { fetchBook, resetBook } from '../reducers/bookSlice';
 
 import { LoadingStatus } from '../utils/redux';
-import { Screens } from '../utils/navigation';
 
-import {
-  NavigationParamsBook,
-  NavigationParamsBookForm,
-} from '../types/navigation.type';
+import { NavigationParamsBookForm } from '../types/navigation.type';
 import { RootState } from '../types/redux.type';
 import { INullableBook } from '../types/book.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'BookScreen'
+>;
 
 interface IProps {
   bookId: number;
-  navigation: NavigationStackProp<NavigationParamsBook>;
+  navigation: ScreenNavigationProp;
 }
 
 function navigateToEditScreen(
-  navigation: NavigationStackProp<NavigationParamsBook>,
+  navigation: ScreenNavigationProp,
   book: INullableBook,
 ) {
   if (!book) {
@@ -37,7 +39,7 @@ function navigateToEditScreen(
     book,
   };
 
-  navigation.navigate(Screens.BookForm, params);
+  navigation.navigate('BookFormScreen', params);
 }
 
 const BookContainer = React.memo<IProps>(({ bookId, navigation }) => {

@@ -1,13 +1,18 @@
 import React from 'react';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Screen from '../components/Screen';
 import BooksContainer from '../containers/BooksContainer';
 
-import { NavigationParamsBooks } from '../types/navigation.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'BooksScreen'
+>;
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsBooks>;
+  navigation: ScreenNavigationProp;
 }
 
 const BooksScreen = ({ navigation }: IProps) => (
@@ -15,9 +20,5 @@ const BooksScreen = ({ navigation }: IProps) => (
     <BooksContainer navigation={navigation} />
   </Screen>
 );
-
-BooksScreen.navigationOptions = {
-  title: 'Books',
-};
 
 export default BooksScreen;

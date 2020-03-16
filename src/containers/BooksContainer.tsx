@@ -1,45 +1,44 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { NavigationStackProp } from 'react-navigation-stack';
 import { useSelector, useDispatch } from 'react-redux';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import CenterView from '../components/CenterView';
 import BookList from '../components/BookList/BookList';
 
-import { Screens } from '../utils/navigation';
 import { LoadingStatus } from '../utils/redux';
 
 import { fetchBooks, resetBooks } from '../reducers/booksSlice';
 
 import {
   NavigationParamsBook,
-  NavigationParamsBooks,
   NavigationParamsBookForm,
 } from '../types/navigation.type';
 import { RootState } from '../types/redux.type';
 import { IBook } from '../types/book.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'BooksScreen'
+>;
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsBooks>;
+  navigation: ScreenNavigationProp;
 }
 
-function navigateToViewScreen(
-  navigation: NavigationStackProp<NavigationParamsBooks>,
-  book: IBook,
-) {
+function navigateToViewScreen(navigation: ScreenNavigationProp, book: IBook) {
   const params: NavigationParamsBook = {
     bookId: book.id,
   };
 
-  navigation.navigate(Screens.Book, params);
+  navigation.navigate('BookScreen', params);
 }
 
-function navigateToCreateScreen(
-  navigation: NavigationStackProp<NavigationParamsBooks>,
-) {
+function navigateToCreateScreen(navigation: ScreenNavigationProp) {
   const params: NavigationParamsBookForm = {};
 
-  navigation.navigate(Screens.BookForm, params);
+  navigation.navigate('BookFormScreen', params);
 }
 
 const BooksContainer = React.memo<IProps>(({ navigation }) => {

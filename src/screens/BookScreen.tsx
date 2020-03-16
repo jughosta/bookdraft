@@ -1,26 +1,27 @@
 import React from 'react';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
 import Screen from '../components/Screen';
 import BookContainer from '../containers/BookContainer';
 
-import { NavigationParamsBook } from '../types/navigation.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'BookScreen'
+>;
+type ScreenRouteProp = RouteProp<RootStackParamList, 'BookScreen'>;
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsBook>;
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 }
 
-const BookScreen = ({ navigation }: IProps) => (
+const BookScreen = ({ navigation, route }: IProps) => (
   <Screen>
-    <BookContainer
-      bookId={navigation.getParam('bookId')}
-      navigation={navigation}
-    />
+    <BookContainer bookId={route.params.bookId} navigation={navigation} />
   </Screen>
 );
-
-BookScreen.navigationOptions = {
-  title: 'Book',
-};
 
 export default BookScreen;
