@@ -33,9 +33,9 @@ const AppNavigator = createStackNavigator(
   },
   {
     initialRouteName: Screens.Books,
-    headerBackTitleVisible: false,
-    headerLayoutPreset: 'center',
     defaultNavigationOptions: {
+      headerBackTitleVisible: false,
+      headerTitleAlign: 'center',
       headerTintColor: Palette.gray.v900,
       headerRightContainerStyle: {
         marginRight: 9,
