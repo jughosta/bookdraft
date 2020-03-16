@@ -1,36 +1,39 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  NavigationStackProp,
-  NavigationStackScreenProps,
-} from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Screen from '../components/Screen';
 import Form from '../components/Form/Form';
-import Touchable from '../components/Touchable';
-import IconTrash from '../icons/IconTrash';
 
 import { createBook, deleteBook, editBook } from '../reducers/bookSlice';
 
 import { getBookFormFields } from '../utils/form';
-import { Palette } from '../utils/theme';
 import { confirmDeletion } from '../utils/alerts';
 
-import { NavigationParamsBookForm } from '../types/navigation.type';
+import { RootStackParamList } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
 import { IBookData } from 'src/types/book.type';
 import { ThunkDispatch } from '../types/redux.type';
+import { RouteProp } from '@react-navigation/native';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'BookFormScreen'
+>;
+type ScreenRouteProp = RouteProp<RootStackParamList, 'BookFormScreen'>;
 
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsBookForm>;
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 }
 
 async function handleSubmit(
   values: FormValues,
-  navigation: NavigationStackProp<NavigationParamsBookForm>,
+  navigation: ScreenNavigationProp,
+  route: ScreenRouteProp,
   dispatch: ThunkDispatch,
 ) {
-  const bookId = navigation.getParam('book', {}).id;
+  const bookId = (route.params.book || {}).id;
   const bookData: IBookData = {
     title: values.title,
   };
@@ -48,26 +51,30 @@ async function handleSubmit(
 }
 
 async function handleDelete(
-  navigation: NavigationStackProp<NavigationParamsBookForm>,
+  navigation: ScreenNavigationProp,
+  route: ScreenRouteProp,
   dispatch: ThunkDispatch,
 ) {
   try {
-    await dispatch(deleteBook(navigation.getParam('book').id));
+    const bookId = (route.params.book || {}).id;
+    if (bookId) {
+      await dispatch(deleteBook(bookId));
+    }
     navigation.pop(2);
   } catch (error) {
     console.warn(error);
   }
 }
 
-const BookFormScreen = ({ navigation }: IProps) => {
+const BookFormScreen = ({ navigation, route }: IProps) => {
   const dispatch = useDispatch();
-  const book = navigation.getParam('book');
+  const book = route.params.book;
 
   useEffect(() => {
     if (book) {
       navigation.setParams({
         onConfirmDeletion: confirmDeletion('book and its content', () =>
-          handleDelete(navigation, dispatch),
+          handleDelete(navigation, route, dispatch),
         ),
       });
     }
@@ -77,24 +84,10 @@ const BookFormScreen = ({ navigation }: IProps) => {
     <Screen scrollable>
       <Form
         fields={getBookFormFields(book)}
-        onSubmit={values => handleSubmit(values, navigation, dispatch)}
+        onSubmit={values => handleSubmit(values, navigation, route, dispatch)}
       />
     </Screen>
   );
-};
-
-BookFormScreen.navigationOptions = ({
-  navigation,
-}: NavigationStackScreenProps<NavigationParamsBookForm>) => {
-  return {
-    title: navigation.getParam('book') ? 'Book details' : 'New book',
-    headerRight: () =>
-      navigation.getParam('book') ? (
-        <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
-          <IconTrash fillColor={Palette.gray.v900} size={20} />
-        </Touchable>
-      ) : null,
-  };
 };
 
 export default BookFormScreen;

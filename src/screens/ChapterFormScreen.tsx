@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  NavigationStackProp,
-  NavigationStackScreenProps,
-} from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
 import Screen from '../components/Screen';
 import Form from '../components/Form/Form';
-import Touchable from '../components/Touchable';
-import IconTrash from '../icons/IconTrash';
 
 import {
   createChapter,
@@ -17,27 +13,34 @@ import {
 } from '../reducers/chapterSlice';
 
 import { getChapterFormFields } from '../utils/form';
-import { Palette } from '../utils/theme';
 import { confirmDeletion } from '../utils/alerts';
 
-import { NavigationParamsChapterForm } from '../types/navigation.type';
+import { RootStackParamList } from '../types/navigation.type';
 import { FormValues } from '../types/form.type';
 import { IChapterData } from 'src/types/chapter.type';
 import { ThunkDispatch } from '../types/redux.type';
 
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChapterFormScreen'
+>;
+type ScreenRouteProp = RouteProp<RootStackParamList, 'ChapterFormScreen'>;
+
 interface IProps {
-  navigation: NavigationStackProp<NavigationParamsChapterForm>;
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 }
 
 async function handleSubmit(
   values: FormValues,
-  navigation: NavigationStackProp<NavigationParamsChapterForm>,
+  navigation: ScreenNavigationProp,
+  route: ScreenRouteProp,
   dispatch: ThunkDispatch,
 ) {
-  const chapterId = navigation.getParam('chapter', {}).id;
+  const chapterId = (route.params.chapter || {}).id;
   const chapterData: IChapterData = {
     title: values.title,
-    bookId: navigation.getParam('bookId'),
+    bookId: route.params.bookId,
   };
 
   try {
@@ -53,26 +56,31 @@ async function handleSubmit(
 }
 
 async function handleDelete(
-  navigation: NavigationStackProp<NavigationParamsChapterForm>,
+  navigation: ScreenNavigationProp,
+  route: ScreenRouteProp,
   dispatch: ThunkDispatch,
 ) {
   try {
-    await dispatch(deleteChapter(navigation.getParam('chapter').id));
+    const chapterId = (route.params.chapter || {}).id;
+
+    if (chapterId) {
+      await dispatch(deleteChapter(chapterId));
+    }
     navigation.pop(2);
   } catch (error) {
     console.warn(error);
   }
 }
 
-const ChapterFormScreen = ({ navigation }: IProps) => {
+const ChapterFormScreen = ({ navigation, route }: IProps) => {
   const dispatch = useDispatch();
-  const chapter = navigation.getParam('chapter');
+  const chapter = route.params.chapter;
 
   useEffect(() => {
     if (chapter) {
       navigation.setParams({
         onConfirmDeletion: confirmDeletion('chapter and its content', () =>
-          handleDelete(navigation, dispatch),
+          handleDelete(navigation, route, dispatch),
         ),
       });
     }
@@ -82,24 +90,10 @@ const ChapterFormScreen = ({ navigation }: IProps) => {
     <Screen scrollable>
       <Form
         fields={getChapterFormFields(chapter)}
-        onSubmit={values => handleSubmit(values, navigation, dispatch)}
+        onSubmit={values => handleSubmit(values, navigation, route, dispatch)}
       />
     </Screen>
   );
-};
-
-ChapterFormScreen.navigationOptions = ({
-  navigation,
-}: NavigationStackScreenProps<NavigationParamsChapterForm>) => {
-  return {
-    title: navigation.getParam('chapter') ? 'Chapter details' : 'New chapter',
-    headerRight: () =>
-      navigation.getParam('chapter') ? (
-        <Touchable onPress={navigation.getParam('onConfirmDeletion')}>
-          <IconTrash fillColor={Palette.gray.v900} size={20} />
-        </Touchable>
-      ) : null,
-  };
 };
 
 export default ChapterFormScreen;

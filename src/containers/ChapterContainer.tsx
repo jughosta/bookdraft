@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Blank from '../components/Blank/Blank';
 import CenterView from '../components/CenterView';
@@ -11,22 +11,24 @@ import ChapterItemsContainer from '../containers/ChapterItemsContainer';
 import { fetchChapter, resetChapter } from '../reducers/chapterSlice';
 
 import { LoadingStatus } from '../utils/redux';
-import { Screens } from '../utils/navigation';
 
-import {
-  NavigationParamsChapter,
-  NavigationParamsChapterForm,
-} from '../types/navigation.type';
+import { NavigationParamsChapterForm } from '../types/navigation.type';
 import { RootState } from '../types/redux.type';
 import { IChapter } from '../types/chapter.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChapterScreen'
+>;
 
 interface IProps {
   chapterId: number;
-  navigation: NavigationStackProp<NavigationParamsChapter>;
+  navigation: ScreenNavigationProp;
 }
 
 function navigateToEditScreen(
-  navigation: NavigationStackProp<NavigationParamsChapter>,
+  navigation: ScreenNavigationProp,
   chapter: IChapter,
 ) {
   if (!chapter) {
@@ -38,7 +40,7 @@ function navigateToEditScreen(
     chapter,
   };
 
-  navigation.navigate(Screens.ChapterForm, params);
+  navigation.navigate('ChapterFormScreen', params);
 }
 
 const ChapterContainer = React.memo<IProps>(({ chapterId, navigation }) => {

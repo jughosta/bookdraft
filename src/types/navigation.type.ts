@@ -34,3 +34,12 @@ export type NavigationParamsChapterItemForm = {
   chapterItem?: IChapterItem;
   onConfirmDeletion?: () => void;
 };
+
+export type RootStackParamList = {
+  BooksScreen: NavigationParamsBooks;
+  BookScreen: NavigationParamsBook;
+  BookFormScreen: NavigationParamsBookForm;
+  ChapterScreen: NavigationParamsChapter;
+  ChapterFormScreen: NavigationParamsChapterForm;
+  ChapterItemFormScreen: NavigationParamsChapterItemForm;
+};

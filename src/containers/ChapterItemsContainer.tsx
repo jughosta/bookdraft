@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { NavigationStackProp } from 'react-navigation-stack';
 import { useSelector, useDispatch } from 'react-redux';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import CenterView from '../components/CenterView';
 import ChapterItemList from '../components/ChapterItemList/ChapterItemList';
 
-import { Screens } from '../utils/navigation';
 import { LoadingStatus } from '../utils/redux';
 
 import {
@@ -14,31 +13,34 @@ import {
   resetChapterItems,
 } from '../reducers/chapterItemsSlice';
 
-import {
-  NavigationParamsChapterItemForm,
-  NavigationParamsChapter,
-} from '../types/navigation.type';
+import { NavigationParamsChapterItemForm } from '../types/navigation.type';
 import { RootState } from '../types/redux.type';
 import { IChapterItem } from '../types/chapterItem.type';
+import { RootStackParamList } from '../types/navigation.type';
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChapterScreen'
+>;
 
 interface IProps {
   chapterId: number;
-  navigation: NavigationStackProp<NavigationParamsChapter>;
+  navigation: ScreenNavigationProp;
 }
 
 function navigateToCreateScreen(
-  navigation: NavigationStackProp<NavigationParamsChapter>,
+  navigation: ScreenNavigationProp,
   chapterId: number,
 ) {
   const params: NavigationParamsChapterItemForm = {
     chapterId,
   };
 
-  navigation.navigate(Screens.ChapterItemForm, params);
+  navigation.navigate('ChapterItemFormScreen', params);
 }
 
 function navigateToEditScreen(
-  navigation: NavigationStackProp<NavigationParamsChapter>,
+  navigation: ScreenNavigationProp,
   chapterItem: IChapterItem,
 ) {
   const params: NavigationParamsChapterItemForm = {
@@ -46,10 +48,10 @@ function navigateToEditScreen(
     chapterItem,
   };
 
-  navigation.navigate(Screens.ChapterItemForm, params);
+  navigation.navigate('ChapterItemFormScreen', params);
 }
 
-const ChaptersItemsContainer = React.memo<IProps>(
+const ChapterItemsContainer = React.memo<IProps>(
   ({ chapterId, navigation }) => {
     const dispatch = useDispatch();
     const loadingStatus = useSelector(
@@ -87,4 +89,4 @@ const ChaptersItemsContainer = React.memo<IProps>(
   },
 );
 
-export default ChaptersItemsContainer;
+export default ChapterItemsContainer;
